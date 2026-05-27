@@ -95,7 +95,7 @@ Once table column widths are fixed, go back to the original ultra-high-res image
 2. Wait for user feedback — fix any issues they point out
 3. Once the user is satisfied, **remind them** packaging is available:
    - **Folder**: copy `index.html` + images to a delivery folder
-   - **Zip**: run `python package_output.py` to create a self-contained zip
+   - **Zip**: run `python pipeline/package_output.py` to create a self-contained zip
 4. Let the user choose which format they prefer
 
 ## Quick Scripts
@@ -105,7 +105,7 @@ Once table column widths are fixed, go back to the original ultra-high-res image
 Export all PDF pages to ultra-high-res images:
 
 ```bash
-python export_pdf.py input.pdf [zoom]
+python pipeline/export_pdf.py input.pdf [zoom]
 ```
 
 - Default zoom: 3x (approximately 4K on A3)
@@ -117,7 +117,7 @@ python export_pdf.py input.pdf [zoom]
 Split an image into regions for inspection:
 
 ```bash
-python auto_crop.py image.png [rows cols]
+python pipeline/auto_crop.py image.png [rows cols]
 ```
 
 - Default grid: 2x2 (4 regions)
@@ -129,7 +129,7 @@ python auto_crop.py image.png [rows cols]
 Bundle reconstructed HTML + images into a deliverable zip:
 
 ```bash
-python package_output.py [output_dir] [zip_name]
+python pipeline/package_output.py [output_dir] [zip_name]
 ```
 
 - Default: current directory, output.zip
@@ -141,19 +141,23 @@ python package_output.py [output_dir] [zip_name]
 Follow this convention for all scan-to-html projects:
 
 ```
-project/
-├── pdf_pages/              # Ultra-high-res exports
-│   ├── page_1.png
-│   └── page_2.png
-├── crops/                  # Auto-cropped regions
-│   ├── page1_r1c1.jpg
-│   └── ...
-├── diagrams/               # Precisely cropped diagrams
-│   ├── page1_A1.jpg
-│   └── ...
-├── page_1.html             # Reconstructed HTML
-├── page_2.html
-└── index.html              # Multi-page navigation (optional)
+scan-to-html/
+├── CLAUDE.md               # Agent auto-discovery entry
+├── SKILL.md                # Skill documentation
+├── README.md               # User-facing docs
+├── pipeline/               # Processing scripts
+│   ├── export_pdf.py       # PDF → high-res PNG
+│   ├── auto_crop.py        # Auto grid crop
+│   ├── list_templates.py   # Template discovery
+│   ├── generate_previews.py# Preview generation
+│   └── package_output.py   # Output packaging
+├── templates/              # 18 document templates
+│   ├── index.html          # Visual template browser
+│   └── [category]/         # template.html + preview.png
+└── (working files created during processing)
+    ├── pdf_pages/          # Ultra-high-res exports
+    ├── crops/              # Auto-cropped regions
+    └── diagrams/           # Precisely cropped diagrams
 ```
 
 ## Template Library
@@ -171,14 +175,14 @@ Pre-built templates for common document types are available in `templates/`.
 **Discovering templates:**
 
 ```bash
-python list_templates.py              # List all templates
-python list_templates.py --json       # JSON output for programmatic use
-python list_templates.py --search 护照  # Search by keyword
-python list_templates.py --detail passport  # Show placeholders
+python pipeline/list_templates.py              # List all templates
+python pipeline/list_templates.py --json       # JSON output for programmatic use
+python pipeline/list_templates.py --search 护照  # Search by keyword
+python pipeline/list_templates.py --detail passport  # Show placeholders
 ```
 
 **Usage flow:**
-1. Run `python list_templates.py` to see available templates
+1. Run `python pipeline/list_templates.py` to see available templates
 2. Or open `templates/index.html` to browse visually with search/filter
 3. Read the template HTML to get placeholder list
 4. Fill placeholders with extracted content: `{{SURNAME}}` → `张三`
@@ -187,7 +191,7 @@ python list_templates.py --detail passport  # Show placeholders
 **To add a new template:**
 1. Create directory: `templates/new_type/`
 2. Create `template.html` with `{{PLACEHOLDER}}` fields
-3. Run `python generate_previews.py` to generate preview
+3. Run `python pipeline/generate_previews.py` to generate preview
 4. Add entry to `templates/index.html` grid
 
 ## Common Mistakes

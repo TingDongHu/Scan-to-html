@@ -20,11 +20,11 @@ pip install pymupdf pillow html2image
 
 | 脚本 | 用途 | 用法 |
 |------|------|------|
-| `export_pdf.py` | PDF → 高清PNG | `python export_pdf.py input.pdf [zoom]` |
-| `auto_crop.py` | 自动网格裁剪 | `python auto_crop.py image.png [rows cols]` |
-| `list_templates.py` | 发现可用模板 | `python list_templates.py [--search 关键词]` |
-| `generate_previews.py` | 生成模板预览图 | `python generate_previews.py` |
-| `package_output.py` | 打包输出为zip | `python package_output.py [目录] [文件名]` |
+| `pipeline/export_pdf.py` | PDF → 高清PNG | `python pipeline/export_pdf.py input.pdf [zoom]` |
+| `pipeline/auto_crop.py` | 自动网格裁剪 | `python pipeline/auto_crop.py image.png [rows cols]` |
+| `pipeline/list_templates.py` | 发现可用模板 | `python pipeline/list_templates.py [--search 关键词]` |
+| `pipeline/generate_previews.py` | 生成模板预览图 | `python pipeline/generate_previews.py` |
+| `pipeline/package_output.py` | 打包输出为zip | `python pipeline/package_output.py [目录] [文件名]` |
 
 ## 模板库
 
@@ -38,8 +38,8 @@ pip install pymupdf pillow html2image
 - **法律**: power_of_attorney, contract
 
 浏览模板：打开 `templates/index.html`（支持搜索和分类筛选）。
-发现模板：`python list_templates.py --search 关键词`
-查看占位符：`python list_templates.py --detail 模板名`
+发现模板：`python pipeline/list_templates.py --search 关键词`
+查看占位符：`python pipeline/list_templates.py --detail 模板名`
 
 ## 工作流程
 
