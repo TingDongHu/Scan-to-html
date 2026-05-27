@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>银行流水 / Bank Statement</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    background: #e8ecf1;
+    padding: 30px 20px;
+    color: #2c3e50;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .statement {
+    width: 720px;
+    background: #fff;
+    margin: 0 auto;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.06),
+      0 8px 24px rgba(0,0,0,0.08),
+      0 20px 60px rgba(0,0,0,0.05);
+  }
+
+  /* Subtle watermark pattern */
+  .statement::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(0,0,0,0.008) 40px,
+        rgba(0,0,0,0.008) 41px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(0,0,0,0.008) 40px,
+        rgba(0,0,0,0.008) 41px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .statement > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 28px 16px 28px;
+    background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 50%, #1a3a5c 100%);
+    color: #fff;
+  }
+
+  .bank h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .bank div {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+
+  .period-info {
+    text-align: right;
+  }
+
+  .period-info .title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+
+  .period-info div {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+  }
+
+  /* ===== ACCOUNT INFO ===== */
+  .account-info {
+    display: flex;
+    gap: 0;
+    margin: 0 28px;
+    margin-top: 18px;
+    padding: 14px 20px;
+    background: linear-gradient(to right, #f7f9fc, #f0f4f8);
+    border: 1px solid #d4dde6;
+    border-left: 4px solid #2c5f8a;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+
+  .account-info .field {
+    flex: 1;
+    padding-right: 16px;
+  }
+
+  .account-info .field:last-child {
+    padding-right: 0;
+  }
+
+  .field label {
+    font-size: 9px;
+    color: #7a8a9e;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    font-weight: 600;
+  }
+
+  .field .value {
+    font-weight: 700;
+    font-size: 12px;
+    color: #1a3a5c;
+    letter-spacing: 0.3px;
+  }
+
+  /* ===== SUMMARY BOXES ===== */
+  .summary {
+    display: flex;
+    gap: 12px;
+    margin: 16px 28px 18px 28px;
+  }
+
+  .summary-box {
+    flex: 1;
+    padding: 12px 8px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #e0e6ed;
+    background: #fafbfc;
+  }
+
+  .summary-box .label {
+    font-size: 9px;
+    color: #7a8a9e;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .summary-box .amount {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a3a5c;
+    letter-spacing: 0.2px;
+  }
+
+  /* Opening balance - neutral blue accent */
+  .summary-box:nth-child(1) {
+    border-top: 3px solid #2c5f8a;
+    background: linear-gradient(to bottom, #f0f5fa, #fafbfc);
+  }
+  .summary-box:nth-child(1) .amount { color: #1a3a5c; }
+
+  /* Credits - green accent */
+  .summary-box:nth-child(2) {
+    border-top: 3px solid #1b8a4a;
+    background: linear-gradient(to bottom, #f0faf4, #fafbfc);
+  }
+  .summary-box:nth-child(2) .amount { color: #1b8a4a; }
+
+  /* Debits - red accent */
+  .summary-box:nth-child(3) {
+    border-top: 3px solid #c0392b;
+    background: linear-gradient(to bottom, #fdf5f3, #fafbfc);
+  }
+  .summary-box:nth-child(3) .amount { color: #c0392b; }
+
+  /* Closing balance - dark accent */
+  .summary-box:nth-child(4) {
+    border-top: 3px solid #1a3a5c;
+    background: linear-gradient(to bottom, #eef2f7, #fafbfc);
+  }
+  .summary-box:nth-child(4) .amount { color: #1a3a5c; }
+
+  /* ===== TRANSACTION TABLE ===== */
+  table {
+    width: calc(100% - 56px);
+    margin: 0 28px;
+    border-collapse: collapse;
+    font-size: 10.5px;
+    border: 1px solid #d4dde6;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  thead tr {
+    background: linear-gradient(135deg, #1a3a5c, #2c5f8a);
+  }
+
+  th {
+    padding: 9px 8px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    text-align: left;
+    border: none;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    white-space: nowrap;
+  }
+
+  th:last-child { border-right: none; }
+
+  th.amount { text-align: right; }
+
+  td {
+    padding: 7px 8px;
+    border-bottom: 1px solid #e8ecf1;
+    color: #34495e;
+    vertical-align: middle;
+  }
+
+  tbody tr:nth-child(odd) {
+    background: #fff;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f8fafb;
+  }
+
+  tbody tr:hover {
+    background: #eef3f8;
+  }
+
+  td.amount {
+    text-align: right;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.2px;
+  }
+
+  td.balance {
+    text-align: right;
+    font-weight: 700;
+    font-family: "Consolas", "Courier New", monospace;
+    color: #1a3a5c;
+    font-size: 10.5px;
+    letter-spacing: 0.2px;
+  }
+
+  .credit {
+    color: #1b8a4a;
+    font-weight: 600;
+  }
+
+  .debit {
+    color: #c0392b;
+    font-weight: 600;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    margin: 20px 28px 18px 28px;
+    padding-top: 14px;
+    border-top: 1px solid #e0e6ed;
+    font-size: 9px;
+    color: #95a5b6;
+    text-align: center;
+    line-height: 1.7;
+    letter-spacing: 0.2px;
+  }
+
+  /* ===== PRINT STYLES ===== */
+  @page {
+    size: A4 portrait;
+    margin: 15mm 12mm;
+  }
+
+  @media print {
+    body {
+      background: #fff;
+      padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .statement {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 0;
+      border: none;
+    }
+
+    .header {
+      background: #1a3a5c !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    thead tr {
+      background: #1a3a5c !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .summary-box:nth-child(2),
+    .summary-box:nth-child(3) {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .credit { color: #1b8a4a !important; }
+    .debit { color: #c0392b !important; }
+
+    tbody tr:nth-child(odd),
+    tbody tr:nth-child(even) {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    tbody tr:hover { background: transparent; }
+  }
+</style>
+</head>
+<body>
+<div class="statement">
+  <div class="header">
+    <div class="bank">
+      <h1>{{BANK_NAME}}</h1>
+      <div>{{BANK_BRANCH}}</div>
+    </div>
+    <div class="period-info">
+      <div class="title">交易明细 / Transaction Statement</div>
+      <div>期间: {{STATEMENT_PERIOD}}</div>
+    </div>
+  </div>
+
+  <div class="account-info">
+    <div class="field"><label>账户名 / Account Name</label><div class="value">{{ACCOUNT_NAME}}</div></div>
+    <div class="field"><label>账号 / Account No.</label><div class="value">{{ACCOUNT_NUMBER}}</div></div>
+    <div class="field"><label>币种 / Currency</label><div class="value">{{CURRENCY}}</div></div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-box"><div class="label">期初余额 / Opening</div><div class="amount">{{OPENING_BALANCE}}</div></div>
+    <div class="summary-box"><div class="label">总收入 / Credits</div><div class="amount credit">{{TOTAL_CREDITS}}</div></div>
+    <div class="summary-box"><div class="label">总支出 / Debits</div><div class="amount debit">{{TOTAL_DEBITS}}</div></div>
+    <div class="summary-box"><div class="label">期末余额 / Closing</div><div class="amount">{{CLOSING_BALANCE}}</div></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>日期</th>
+        <th>描述 / Description</th>
+        <th>对方账户 / Counterparty</th>
+        <th>收支 / Type</th>
+        <th class="amount">金额 / Amount</th>
+        <th class="amount">余额 / Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{TXN1_DATE}}</td>
+        <td>{{TXN1_DESC}}</td>
+        <td>{{TXN1_PARTY}}</td>
+        <td>{{TXN1_TYPE}}</td>
+        <td class="amount {{TXN1_CLASS}}">{{TXN1_AMOUNT}}</td>
+        <td class="balance">{{TXN1_BALANCE}}</td>
+      </tr>
+      <tr>
+        <td>{{TXN2_DATE}}</td>
+        <td>{{TXN2_DESC}}</td>
+        <td>{{TXN2_PARTY}}</td>
+        <td>{{TXN2_TYPE}}</td>
+        <td class="amount {{TXN2_CLASS}}">{{TXN2_AMOUNT}}</td>
+        <td class="balance">{{TXN2_BALANCE}}</td>
+      </tr>
+      <tr>
+        <td>{{TXN3_DATE}}</td>
+        <td>{{TXN3_DESC}}</td>
+        <td>{{TXN3_PARTY}}</td>
+        <td>{{TXN3_TYPE}}</td>
+        <td class="amount {{TXN3_CLASS}}">{{TXN3_AMOUNT}}</td>
+        <td class="balance">{{TXN3_BALANCE}}</td>
+      </tr>
+      <tr>
+        <td>{{TXN4_DATE}}</td>
+        <td>{{TXN4_DESC}}</td>
+        <td>{{TXN4_PARTY}}</td>
+        <td>{{TXN4_TYPE}}</td>
+        <td class="amount {{TXN4_CLASS}}">{{TXN4_AMOUNT}}</td>
+        <td class="balance">{{TXN4_BALANCE}}</td>
+      </tr>
+      <tr>
+        <td>{{TXN5_DATE}}</td>
+        <td>{{TXN5_DESC}}</td>
+        <td>{{TXN5_PARTY}}</td>
+        <td>{{TXN5_TYPE}}</td>
+        <td class="amount {{TXN5_CLASS}}">{{TXN5_AMOUNT}}</td>
+        <td class="balance">{{TXN5_BALANCE}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div>此流水由 {{BANK_NAME}} 生成，仅供记录参考</div>
+    <div>This statement was generated by {{BANK_NAME}} for record purposes only</div>
+  </div>
+</div>
+</body>
+</html>

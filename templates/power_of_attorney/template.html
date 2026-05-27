@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>委托书 / Power of Attorney</title>
+<style>
+  /* === Reset & Base === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "SimSun", "Microsoft YaHei", Georgia, serif;
+    background: #e8e4e0;
+    padding: 30px 20px;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+
+  /* === Page Container === */
+  .poa {
+    width: 680px;
+    min-height: 960px;
+    background: #fffef9;
+    border: 1px solid #b8a89a;
+    padding: 0;
+    margin: 0 auto;
+    position: relative;
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.12),
+      0 0 0 1px rgba(139,90,43,0.08);
+    overflow: hidden;
+  }
+
+  /* === Watermark Pattern via ::before === */
+  .poa::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 60px,
+        rgba(180,40,40,0.018) 60px,
+        rgba(180,40,40,0.018) 61px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 60px,
+        rgba(180,40,40,0.018) 60px,
+        rgba(180,40,40,0.018) 61px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === Decorative Corner Ornaments via ::after === */
+  .poa::after {
+    content: "";
+    position: absolute;
+    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    border: 1px solid rgba(160,50,50,0.15);
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === Red Header Bar === */
+  .header-bar {
+    background: linear-gradient(135deg, #b82020 0%, #8b1a1a 50%, #b82020 100%);
+    padding: 28px 40px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-bar::after {
+    content: "";
+    position: absolute;
+    bottom: -6px; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(to bottom, rgba(139,26,26,0.3), transparent);
+  }
+
+  .header-bar h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 12px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  }
+
+  .header-bar h2 {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+    letter-spacing: 4px;
+    margin-top: 6px;
+    font-family: Georgia, "Times New Roman", serif;
+    text-transform: uppercase;
+  }
+
+  .header-bar .doc-number {
+    position: absolute;
+    top: 10px; right: 20px;
+    font-size: 9px;
+    color: rgba(255,255,255,0.55);
+    font-family: "Courier New", monospace;
+    letter-spacing: 1px;
+  }
+
+  /* === Body Content === */
+  .content {
+    position: relative;
+    z-index: 1;
+    padding: 30px 45px 20px;
+    font-size: 13px;
+    line-height: 2.2;
+    text-align: justify;
+    color: #1a1a1a;
+  }
+
+  .content .field {
+    margin-bottom: 4px;
+  }
+
+  .content .value {
+    border-bottom: 1px solid #333;
+    padding: 1px 10px;
+    display: inline-block;
+    min-width: 160px;
+    font-weight: 500;
+    color: #111;
+  }
+
+  .content .intro-text {
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .content .legal-text {
+    font-size: 11.5px;
+    color: #444;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #faf8f5;
+    border-left: 3px solid #b82020;
+    line-height: 2;
+  }
+
+  /* === Scope / Authority Section === */
+  .scope {
+    position: relative;
+    z-index: 1;
+    margin: 0 45px 20px;
+    padding: 18px 22px;
+    background: #fdfcfa;
+    border: 1px solid #d4c8b8;
+    border-left: 4px solid #b82020;
+  }
+
+  .scope h3 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #8b1a1a;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  }
+
+  .scope ul {
+    font-size: 12px;
+    line-height: 2.2;
+    padding-left: 22px;
+    color: #222;
+  }
+
+  .scope ul li {
+    margin-bottom: 2px;
+  }
+
+  .scope ul li::marker {
+    color: #b82020;
+    font-weight: bold;
+  }
+
+  /* === Validity Period === */
+  .validity {
+    position: relative;
+    z-index: 1;
+    padding: 0 45px 10px;
+    font-size: 13px;
+    line-height: 2.2;
+  }
+
+  .validity .value {
+    border-bottom: 1px solid #333;
+    padding: 1px 10px;
+    display: inline-block;
+    min-width: 140px;
+    font-weight: 500;
+  }
+
+  /* === Signature Section === */
+  .signatures {
+    position: relative;
+    z-index: 1;
+    margin-top: 35px;
+    padding: 20px 45px 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .sig-block {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    color: #333;
+  }
+
+  .sig-block .sig-title {
+    font-weight: 700;
+    font-size: 12px;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  }
+
+  .sig-block .sig-subtitle {
+    font-size: 9px;
+    color: #888;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .sig-block .sig-line {
+    border-bottom: 1px solid #333;
+    height: 50px;
+    margin-bottom: 6px;
+  }
+
+  .sig-block .sig-date {
+    font-size: 10px;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  /* === Seal Area (circular red border) === */
+  .seal-area {
+    width: 100px;
+    height: 100px;
+    border: 2.5px solid #c0392b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #c0392b;
+    margin: 12px auto 0;
+    position: relative;
+    background: radial-gradient(circle, rgba(192,57,43,0.03) 0%, transparent 70%);
+  }
+
+  .seal-area::before {
+    content: "";
+    position: absolute;
+    top: 4px; left: 4px; right: 4px; bottom: 4px;
+    border: 1px solid rgba(192,57,43,0.35);
+    border-radius: 50%;
+  }
+
+  .seal-area.notary-seal {
+    width: 120px;
+    height: 120px;
+    border-width: 3px;
+    font-size: 10px;
+  }
+
+  /* === Footer / Notary Section === */
+  .footer {
+    position: relative;
+    z-index: 1;
+    margin-top: 10px;
+    padding: 20px 45px 30px;
+    border-top: 1px solid #d4c8b8;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .footer .notary-text {
+    font-size: 11px;
+    color: #555;
+    line-height: 2;
+  }
+
+  .footer .notary-text .notary-title {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 12px;
+    margin-bottom: 4px;
+    font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  }
+
+  .footer .notary-info {
+    font-size: 9px;
+    color: #999;
+    margin-top: 8px;
+    line-height: 1.8;
+  }
+
+  /* === Bottom Edge Decoration === */
+  .bottom-edge {
+    position: relative;
+    z-index: 1;
+    height: 8px;
+    background: linear-gradient(135deg, #b82020 0%, #8b1a1a 50%, #b82020 100%);
+  }
+
+  /* === @page and @media print === */
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  @media print {
+    body {
+      background: #fff;
+      padding: 0;
+    }
+
+    .poa {
+      width: 100%;
+      border: none;
+      box-shadow: none;
+      min-height: auto;
+    }
+
+    .poa::after {
+      border-color: rgba(160,50,50,0.2);
+    }
+
+    .header-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .seal-area {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .scope {
+      break-inside: avoid;
+    }
+
+    .signatures {
+      break-inside: avoid;
+    }
+
+    .legal-text {
+      break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="poa">
+  <div class="header-bar">
+    <span class="doc-number">NO. ___________</span>
+    <h1>委 托 书</h1>
+    <h2>POWER OF ATTORNEY</h2>
+  </div>
+
+  <div class="content">
+    <p class="intro-text">兹委托如下：</p>
+    <p class="field">委托人（本人）：<span class="value">{{PRINCIPAL_NAME}}</span>，身份证号：<span class="value">{{PRINCIPAL_ID}}</span>。</p>
+    <br>
+    <p class="field">受委托人：<span class="value">{{AGENT_NAME}}</span>，身份证号：<span class="value">{{AGENT_ID}}</span>。</p>
+    <br>
+    <p>委托事项及权限：</p>
+  </div>
+
+  <div class="scope">
+    <h3>委托权限范围 / Scope of Authority</h3>
+    <ul>
+      <li>{{AUTHORITY_1}}</li>
+      <li>{{AUTHORITY_2}}</li>
+      <li>{{AUTHORITY_3}}</li>
+    </ul>
+  </div>
+
+  <div class="validity">
+    <p>委托有效期：自 <span class="value">{{VALID_FROM}}</span> 至 <span class="value">{{VALID_TO}}</span></p>
+  </div>
+
+  <div class="content">
+    <div class="legal-text">
+      本人确认上述委托事项真实有效，受委托人在上述权限范围内所签署的一切文件和处理的相关事务，本人均予以承认。本委托书自签署之日起生效，有效期至上述截止日期。委托人不得在委托期限内擅自撤销本委托，除非经受委托人书面同意。
+    </div>
+  </div>
+
+  <div class="signatures">
+    <div class="sig-block">
+      <div class="sig-title">委托人签字</div>
+      <div class="sig-subtitle">Principal Signature</div>
+      <div class="sig-line"></div>
+      <div class="seal-area">签名章</div>
+      <div class="sig-date">日期 / Date: {{PRINCIPAL_DATE}}</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-title">受委托人签字</div>
+      <div class="sig-subtitle">Agent Signature</div>
+      <div class="sig-line"></div>
+      <div class="seal-area">签名章</div>
+      <div class="sig-date">日期 / Date: {{AGENT_DATE}}</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="notary-text">
+      <div class="notary-title">公证处意见</div>
+      <div>Notary Public Certification</div>
+      <div class="notary-info">
+        公证员 / Notary: ___________<br>
+        公证处编号 / Certificate No.: ___________
+      </div>
+    </div>
+    <div class="seal-area notary-seal">公证处公章</div>
+  </div>
+
+  <div class="bottom-edge"></div>
+</div>
+</body>
+</html>

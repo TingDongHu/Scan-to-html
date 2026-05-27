@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机动车驾驶证</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Microsoft YaHei", "SimHei", "Heiti SC", Arial, sans-serif;
+    background: #e8e4e0;
+    padding: 40px 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===== Card Container ===== */
+  .license-card {
+    width: 560px;
+    height: 400px;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.12),
+      0 8px 24px rgba(0,0,0,0.08),
+      0 0 0 1px rgba(0,0,0,0.05);
+    background: linear-gradient(145deg, #f7e8e8 0%, #f2dddd 40%, #f5e0df 100%);
+  }
+
+  /* Subtle background pattern */
+  .license-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 12px,
+        rgba(196,140,130,0.04) 12px,
+        rgba(196,140,130,0.04) 13px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Faint watermark-style circle pattern */
+  .license-card::after {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,150,140,0.06) 0%, transparent 70%);
+    top: -60px;
+    right: -60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card-inner {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 22px 14px;
+  }
+
+  /* ===== Top Header Bar ===== */
+  .header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1.5px solid rgba(160,60,50,0.25);
+  }
+
+  .header-bar .emblem {
+    font-size: 11px;
+    color: #a03c32;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+  }
+
+  .header-bar h1 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #b8322a;
+    letter-spacing: 3px;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .header-bar .subtitle {
+    font-size: 9px;
+    color: #999;
+    letter-spacing: 1.5px;
+    margin-top: 1px;
+  }
+
+  /* ===== Main Content Area ===== */
+  .content-area {
+    display: flex;
+    gap: 18px;
+    flex: 1;
+  }
+
+  /* ===== Fields Section ===== */
+  .fields-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .field-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 11.5px;
+    line-height: 1.6;
+  }
+
+  .field-row.split {
+    gap: 12px;
+  }
+
+  .field-label {
+    color: #6b3028;
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 11px;
+    min-width: 58px;
+    flex-shrink: 0;
+  }
+
+  .field-value {
+    color: #222;
+    border-bottom: 1px solid rgba(150,80,60,0.2);
+    padding: 0 3px 1px;
+    min-width: 80px;
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .field-value.address {
+    min-width: 200px;
+  }
+
+  .field-value.validity {
+    min-width: 60px;
+  }
+
+  .field-row-inline {
+    display: flex;
+    gap: 10px;
+  }
+
+  .field-row-inline .field-group-pair {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .field-row-inline .field-group-pair .field-value {
+    min-width: 60px;
+  }
+
+  /* ===== Photo Area ===== */
+  .photo-area {
+    width: 110px;
+    height: 140px;
+    border: 1.5px solid rgba(160,80,60,0.25);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.5);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .photo-placeholder {
+    color: #b0908a;
+    font-size: 10px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .photo-placeholder .icon {
+    display: block;
+    font-size: 26px;
+    margin-bottom: 4px;
+    opacity: 0.5;
+  }
+
+  /* ===== Vehicle Class Section ===== */
+  .class-section {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px solid rgba(160,80,60,0.15);
+  }
+
+  .class-title {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #8b5550;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+  }
+
+  .class-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 10px;
+  }
+
+  .class-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .class-checkbox {
+    width: 11px;
+    height: 11px;
+    border: 1.5px solid #a0706a;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.5);
+  }
+
+  .class-checkbox.checked::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #b8322a;
+    border-radius: 1px;
+  }
+
+  .class-label {
+    font-size: 9.5px;
+    color: #5a3028;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* ===== Bottom Barcode Area ===== */
+  .footer-area {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(160,80,60,0.12);
+  }
+
+  .barcode-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .barcode-lines {
+    display: flex;
+    gap: 1px;
+    height: 22px;
+    align-items: flex-end;
+  }
+
+  .barcode-lines .bar {
+    background: #6b3028;
+    height: 100%;
+    opacity: 0.6;
+  }
+
+  .barcode-number {
+    font-size: 7px;
+    color: #998;
+    letter-spacing: 2px;
+    font-family: "Consolas", "Courier New", monospace;
+  }
+
+  .qr-area {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(100,60,50,0.2);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,0.4);
+  }
+
+  /* Fake QR pattern */
+  .qr-area::before {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    background:
+      /* Corners */
+      linear-gradient(#7a4038, #7a4038) 0 0 / 10px 10px no-repeat,
+      linear-gradient(#7a4038, #7a4038) calc(100% - 10px) 0 / 10px 10px no-repeat,
+      linear-gradient(#7a4038, #7a4038) 0 calc(100% - 10px) / 10px 10px no-repeat;
+    opacity: 0.3;
+  }
+
+  .qr-area::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: rgba(100,60,50,0.25);
+    border-radius: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .qr-label {
+    font-size: 7px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 1px;
+  }
+
+  .footer-note {
+    font-size: 7.5px;
+    color: #b0a0a0;
+    text-align: right;
+    line-height: 1.3;
+  }
+
+  .footer-note .issue-authority {
+    font-weight: 600;
+    color: #998;
+  }
+</style>
+</head>
+<body>
+
+<div class="license-card">
+  <div class="card-inner">
+
+    <!-- ===== Header ===== -->
+    <div class="header-bar">
+      <div class="emblem">★</div>
+      <h1>中华人民共和国机动车驾驶证</h1>
+      <div class="subtitle">DRIVER'S LICENSE OF THE PEOPLE'S REPUBLIC OF CHINA</div>
+    </div>
+
+    <!-- ===== Content ===== -->
+    <div class="content-area">
+
+      <!-- Left: Fields -->
+      <div class="fields-section">
+        <div class="field-group">
+          <!-- Row 1: Name -->
+          <div class="field-row">
+            <span class="field-label">姓 名:</span>
+            <span class="field-value" style="min-width:90px;">{{NAME}}</span>
+          </div>
+
+          <!-- Row 2: Sex + Nationality -->
+          <div class="field-row field-row-inline">
+            <div class="field-group-pair">
+              <span class="field-label">性 别:</span>
+              <span class="field-value">{{SEX}}</span>
+            </div>
+            <div class="field-group-pair">
+              <span class="field-label">国 籍:</span>
+              <span class="field-value" style="min-width:50px;">{{NATIONALITY}}</span>
+            </div>
+          </div>
+
+          <!-- Row 3: Address -->
+          <div class="field-row">
+            <span class="field-label">住 址:</span>
+            <span class="field-value address">{{ADDRESS}}</span>
+          </div>
+
+          <!-- Row 4: DOB -->
+          <div class="field-row">
+            <span class="field-label">出生日期:</span>
+            <span class="field-value">{{DOB}}</span>
+          </div>
+
+          <!-- Row 5: First Issue Date -->
+          <div class="field-row">
+            <span class="field-label">初次领证日期:</span>
+            <span class="field-value">{{FIRST_ISSUE}}</span>
+          </div>
+
+          <!-- Row 6: Vehicle Class -->
+          <div class="field-row">
+            <span class="field-label">准驾车型:</span>
+            <span class="field-value" style="min-width:40px;">{{VEHICLE_CLASS}}</span>
+          </div>
+
+          <!-- Row 7: Validity Period -->
+          <div class="field-row">
+            <span class="field-label">有效期限:</span>
+            <span class="field-value validity">{{VALID_FROM}}</span>
+            <span style="color:#888; margin:0 2px;">至</span>
+            <span class="field-value validity">{{VALID_TO}}</span>
+          </div>
+
+          <!-- Row 8: License Number -->
+          <div class="field-row">
+            <span class="field-label">证 号:</span>
+            <span class="field-value" style="min-width:140px;">{{LICENSE_NUMBER}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Photo -->
+      <div class="photo-area">
+        <div class="photo-placeholder">
+          <span class="icon">📷</span>
+          照片
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== Vehicle Class Checkboxes ===== -->
+    <div class="class-section">
+      <div class="class-title">准驾车型代号</div>
+      <div class="class-grid">
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">A1</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">A2</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">A3</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">B1</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">B2</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">C1</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">C2</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">C3</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">D</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">E</span></div>
+        <div class="class-item"><span class="class-checkbox"></span><span class="class-label">F</span></div>
+      </div>
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <div class="footer-area">
+      <div class="barcode-area">
+        <div class="barcode-lines">
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:3px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:3px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:3px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:3px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:2px;"></div>
+          <div class="bar" style="width:1px;"></div>
+          <div class="bar" style="width:3px;"></div>
+          <div class="bar" style="width:1px;"></div>
+        </div>
+        <div class="barcode-number">{{LICENSE_NUMBER}}</div>
+      </div>
+
+      <div style="display:flex; align-items:flex-end; gap:10px;">
+        <div class="footer-note">
+          <div>记录</div>
+          <div class="issue-authority">XX市公安局公安交通管理局</div>
+          <div>发证机关</div>
+        </div>
+        <div>
+          <div class="qr-area"></div>
+          <div class="qr-label">扫码核验</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

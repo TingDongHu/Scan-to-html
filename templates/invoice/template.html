@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>发票 / Invoice</title>
+<style>
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+    background: #e8ecf1;
+    padding: 30px;
+    color: #2c3e50;
+    line-height: 1.5;
+  }
+
+  .invoice {
+    width: 800px;
+    background: #fff;
+    margin: 0 auto;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  /* ── Colored Header Bar ── */
+  .header-bar {
+    background: linear-gradient(135deg, #1a2a4a 0%, #2c3e6b 100%);
+    color: #fff;
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-bar .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .header-bar .logo-placeholder {
+    width: 64px;
+    height: 64px;
+    border: 2px dashed rgba(255,255,255,0.35);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.5);
+  }
+  .header-bar .company-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .header-bar .company-tagline {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+  .header-bar .title-block {
+    text-align: right;
+  }
+  .header-bar .title-block .doc-title {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .header-bar .title-block .doc-title-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── Body ── */
+  .invoice-body {
+    padding: 32px 40px 24px 40px;
+  }
+
+  /* ── Invoice Meta Row ── */
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 24px;
+  }
+  .meta-box {
+    flex: 1;
+    background: #f5f7fa;
+    border-radius: 4px;
+    padding: 14px 18px;
+    border-left: 3px solid #2c3e6b;
+  }
+  .meta-box .meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #7f8c9b;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .meta-box .meta-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a2a4a;
+  }
+
+  /* ── Parties Section ── */
+  .parties {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 30px;
+  }
+  .party {
+    flex: 1;
+    border: 1px solid #e4e8ed;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .party-header {
+    background: #f0f3f7;
+    padding: 10px 16px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: #5a6a7a;
+    border-bottom: 1px solid #e4e8ed;
+  }
+  .party-body {
+    padding: 14px 16px;
+    font-size: 12px;
+  }
+  .party-body .party-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a2a4a;
+    margin-bottom: 6px;
+  }
+  .party-body .field {
+    margin-bottom: 3px;
+    color: #555;
+  }
+  .party-body .field-label {
+    color: #8a95a3;
+    display: inline-block;
+    min-width: 56px;
+  }
+
+  /* ── Items Table ── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+    font-size: 12px;
+  }
+  .items-table thead th {
+    background: #1a2a4a;
+    color: #fff;
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .items-table thead th:nth-child(n+2) {
+    text-align: right;
+  }
+  .items-table thead th:first-child {
+    border-radius: 4px 0 0 0;
+  }
+  .items-table thead th:last-child {
+    border-radius: 0 4px 0 0;
+  }
+  .items-table tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #eef1f5;
+  }
+  .items-table tbody td:nth-child(n+2) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .items-table tbody tr:nth-child(even) {
+    background: #f8f9fb;
+  }
+  .items-table tbody tr:hover {
+    background: #eef2f8;
+  }
+  .items-table tbody tr:last-child td {
+    border-bottom: 2px solid #1a2a4a;
+  }
+
+  /* ── Totals Section ── */
+  .totals-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0;
+    padding: 0 40px 32px 40px;
+  }
+  .totals-table {
+    width: 320px;
+    border-collapse: collapse;
+  }
+  .totals-table tr td {
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #555;
+  }
+  .totals-table tr td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .totals-table .subtotal-row td {
+    border-top: 1px solid #e4e8ed;
+    padding-top: 12px;
+  }
+  .totals-table .tax-row td {
+    color: #7a8594;
+    font-size: 11px;
+  }
+  .totals-table .discount-row td {
+    color: #c0392b;
+    font-size: 11px;
+  }
+  .totals-table .grand-total-row td {
+    border-top: 3px solid #1a2a4a;
+    border-bottom: 2px solid #1a2a4a;
+    padding: 14px 16px;
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a2a4a;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Payment & Bank Section ── */
+  .bottom-sections {
+    display: flex;
+    gap: 28px;
+    margin-top: 28px;
+    padding: 0 40px 32px 40px;
+  }
+  .bottom-box {
+    flex: 1;
+    border: 1px solid #e4e8ed;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bottom-box-header {
+    background: #f0f3f7;
+    padding: 9px 16px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: #5a6a7a;
+    border-bottom: 1px solid #e4e8ed;
+  }
+  .bottom-box-body {
+    padding: 14px 16px;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.7;
+  }
+  .bottom-box-body .label {
+    color: #8a95a3;
+    display: inline-block;
+    min-width: 70px;
+  }
+
+  /* ── Notes Row ── */
+  .notes-row {
+    margin: 0 40px 28px 40px;
+    padding: 14px 18px;
+    background: #fafbfc;
+    border: 1px dashed #d5dbe4;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #666;
+  }
+  .notes-row .notes-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #8a95a3;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  /* ── Footer ── */
+  .invoice-footer {
+    background: #f0f3f7;
+    border-top: 1px solid #e4e8ed;
+    padding: 22px 40px;
+    text-align: center;
+  }
+  .invoice-footer .thank-you {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a2a4a;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .invoice-footer .thank-you-sub {
+    font-size: 10px;
+    color: #8a95a3;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Print Styles ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .invoice { box-shadow: none; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="invoice">
+
+  <!-- ════ HEADER BAR ════ -->
+  <div class="header-bar">
+    <div class="logo-area">
+      <div class="logo-placeholder">LOGO</div>
+      <div>
+        <div class="company-name">{{COMPANY_NAME}}</div>
+        <div class="company-tagline">{{COMPANY_ADDRESS}} &nbsp;|&nbsp; {{COMPANY_CITY}} &nbsp;|&nbsp; Tel: {{COMPANY_PHONE}}</div>
+      </div>
+    </div>
+    <div class="title-block">
+      <div class="doc-title">Invoice</div>
+      <div class="doc-title-sub">Fa Piao</div>
+    </div>
+  </div>
+
+  <!-- ════ INVOICE META ════ -->
+  <div class="invoice-body">
+    <div class="meta-row">
+      <div class="meta-box">
+        <div class="meta-label">Invoice Number / 发票编号</div>
+        <div class="meta-value">{{INVOICE_NUMBER}}</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-label">Issue Date / 开票日期</div>
+        <div class="meta-value">{{INVOICE_DATE}}</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-label">Due Date / 到期日</div>
+        <div class="meta-value">{{DUE_DATE}}</div>
+      </div>
+    </div>
+
+    <!-- ════ CUSTOMER / VENDOR ════ -->
+    <div class="parties">
+      <div class="party">
+        <div class="party-header">Bill To / 开票对象</div>
+        <div class="party-body">
+          <div class="party-name">{{CUSTOMER_NAME}}</div>
+          <div class="field"><span class="field-label">Address:</span> {{CUSTOMER_ADDRESS}}</div>
+          <div class="field"><span class="field-label">Tax ID:</span> {{CUSTOMER_TAX_ID}}</div>
+        </div>
+      </div>
+      <div class="party">
+        <div class="party-header">Ship To / 收货方</div>
+        <div class="party-body">
+          <div class="party-name">{{SHIP_TO_NAME}}</div>
+          <div class="field"><span class="field-label">Address:</span> {{SHIP_TO_ADDRESS}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ ITEMS TABLE ════ -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width:44%">Description / 货物描述</th>
+          <th style="width:12%">Qty / 数量</th>
+          <th style="width:18%">Unit Price / 单价</th>
+          <th style="width:26%">Amount / 小计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ITEM_1_DESC}}</td>
+          <td>{{ITEM_1_QTY}}</td>
+          <td>{{ITEM_1_PRICE}}</td>
+          <td>{{ITEM_1_TOTAL}}</td>
+        </tr>
+        <tr>
+          <td>{{ITEM_2_DESC}}</td>
+          <td>{{ITEM_2_QTY}}</td>
+          <td>{{ITEM_2_PRICE}}</td>
+          <td>{{ITEM_2_TOTAL}}</td>
+        </tr>
+        <tr>
+          <td>{{ITEM_3_DESC}}</td>
+          <td>{{ITEM_3_QTY}}</td>
+          <td>{{ITEM_3_PRICE}}</td>
+          <td>{{ITEM_3_TOTAL}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════ TOTALS ════ -->
+  <div class="totals-section">
+    <table class="totals-table">
+      <tr class="subtotal-row">
+        <td>Subtotal / 小计</td>
+        <td>{{SUBTOTAL}}</td>
+      </tr>
+      <tr class="tax-row">
+        <td>Tax ({{TAX_RATE}}%) / 税费</td>
+        <td>{{TAX_AMOUNT}}</td>
+      </tr>
+      <tr class="grand-total-row">
+        <td>TOTAL / 合计</td>
+        <td>{{TOTAL}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ════ NOTES ════ -->
+  <div class="notes-row">
+    <div class="notes-label">Remarks / 备注</div>
+    <div>{{NOTES}}</div>
+  </div>
+
+  <!-- ════ PAYMENT & BANK ════ -->
+  <div class="bottom-sections">
+    <div class="bottom-box">
+      <div class="bottom-box-header">Payment Terms / 付款条款</div>
+      <div class="bottom-box-body">
+        <div><span class="label">Method:</span> {{PAYMENT_METHOD}}</div>
+        <div><span class="label">Terms:</span> {{PAYMENT_TERMS}}</div>
+      </div>
+    </div>
+    <div class="bottom-box">
+      <div class="bottom-box-header">Bank Details / 银行信息</div>
+      <div class="bottom-box-body">
+        <div><span class="label">Bank:</span> {{BANK_NAME}}</div>
+        <div><span class="label">A/C No:</span> {{BANK_ACCOUNT}}</div>
+        <div><span class="label">SWIFT:</span> {{BANK_SWIFT}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ FOOTER ════ -->
+  <div class="invoice-footer">
+    <div class="thank-you">Thank you for your business!</div>
+    <div class="thank-you-sub">感谢您的信任与合作 &nbsp;&bull;&nbsp; This invoice was generated automatically.</div>
+  </div>
+
+</div>
+
+</body>
+</html>

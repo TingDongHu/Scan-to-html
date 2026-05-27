@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档模板库 / Template Library</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 8px; }
+  .subtitle { color: #666; margin-bottom: 20px; font-size: 13px; }
+  .search-box { margin-bottom: 20px; }
+  .search-box input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .category-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab {
+    padding: 6px 12px;
+    background: #e0e0e0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .tab.active { background: #333; color: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+  .card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .card-img {
+    width: 100%;
+    height: 110px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 11px;
+    overflow: hidden;
+  }
+  .card-title {
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    border-top: 1px solid #eee;
+    line-height: 1.4;
+  }
+  .card-category {
+    padding: 0 10px 8px;
+    font-size: 10px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>文档模板库 / Document Templates</h1>
+  <p class="subtitle">选择模板进行预览或下载 (共18个模板)</p>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="搜索模板... (护照、发票、合同...)" oninput="filterTemplates()">
+  </div>
+
+  <div class="category-tabs">
+    <button class="tab active" onclick="filterCategory('all')">全部</button>
+    <button class="tab" onclick="filterCategory('identity')">身份证件</button>
+    <button class="tab" onclick="filterCategory('travel')">旅行</button>
+    <button class="tab" onclick="filterCategory('business')">商务</button>
+    <button class="tab" onclick="filterCategory('finance')">财务</button>
+    <button class="tab" onclick="filterCategory('certificate')">证书</button>
+    <button class="tab" onclick="filterCategory('legal')">法律</button>
+  </div>
+
+  <div class="grid" id="template-grid">
+
+    <!-- ===== 身份证件 / Identity ===== -->
+    <a href="passport/template.html" class="card" data-category="identity" data-keywords="护照 passport pasaporte 身份 证件 travel">
+      <div class="card-img"><img src="passport/preview.png" alt="护照" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">护照 / Passport</div>
+      <div class="card-category">身份证件</div>
+    </a>
+
+    <a href="id_card/template.html" class="card" data-category="identity" data-keywords="身份证 id card dni 身份 证件 identity">
+      <div class="card-img"><img src="id_card/preview.png" alt="身份证" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">身份证 / ID Card</div>
+      <div class="card-category">身份证件</div>
+    </a>
+
+    <a href="driver_license/template.html" class="card" data-category="identity" data-keywords="驾照 driver license 驾驶证 身份 证件">
+      <div class="card-img"><img src="driver_license/preview.png" alt="驾照" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">驾照 / Driver License</div>
+      <div class="card-category">身份证件</div>
+    </a>
+
+    <a href="business_card/template.html" class="card" data-category="identity" data-keywords="名片 business card 联系方式 名片">
+      <div class="card-img"><img src="business_card/preview.png" alt="名片" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">名片 / Business Card</div>
+      <div class="card-category">身份证件</div>
+    </a>
+
+    <!-- ===== 旅行 / Travel ===== -->
+    <a href="visa/template.html" class="card" data-category="travel" data-keywords="签证 visa travel 旅行 入境">
+      <div class="card-img"><img src="visa/preview.png" alt="签证" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">签证 / Visa</div>
+      <div class="card-category">旅行</div>
+    </a>
+
+    <a href="boarding_pass/template.html" class="card" data-category="travel" data-keywords="登机牌 boarding pass 航班 flight 飞机">
+      <div class="card-img"><img src="boarding_pass/preview.png" alt="登机牌" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">登机牌 / Boarding Pass</div>
+      <div class="card-category">旅行</div>
+    </a>
+
+    <a href="hotel_booking/template.html" class="card" data-category="travel" data-keywords="酒店 hotel booking 预订 住宿">
+      <div class="card-img"><img src="hotel_booking/preview.png" alt="酒店预订单" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">酒店预订单 / Hotel Booking</div>
+      <div class="card-category">旅行</div>
+    </a>
+
+    <!-- ===== 商务 / Business ===== -->
+    <a href="invoice/template.html" class="card" data-category="business" data-keywords="发票 invoice factura 账单 商务">
+      <div class="card-img"><img src="invoice/preview.png" alt="发票" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">发票 / Invoice</div>
+      <div class="card-category">商务</div>
+    </a>
+
+    <a href="receipt/template.html" class="card" data-category="business" data-keywords="收据 receipt 凭证 消费">
+      <div class="card-img"><img src="receipt/preview.png" alt="收据" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">收据 / Receipt</div>
+      <div class="card-category">商务</div>
+    </a>
+
+    <a href="quotation/template.html" class="card" data-category="business" data-keywords="报价单 quotation 报价 报价单">
+      <div class="card-img"><img src="quotation/preview.png" alt="报价单" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">报价单 / Quotation</div>
+      <div class="card-category">商务</div>
+    </a>
+
+    <!-- ===== 财务 / Finance ===== -->
+    <a href="payslip/template.html" class="card" data-category="finance" data-keywords="工资单 payslip salary 薪资 工资">
+      <div class="card-img"><img src="payslip/preview.png" alt="工资单" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">工资单 / Payslip</div>
+      <div class="card-category">财务</div>
+    </a>
+
+    <a href="bank_statement/template.html" class="card" data-category="finance" data-keywords="银行流水 bank statement 交易 银行">
+      <div class="card-img"><img src="bank_statement/preview.png" alt="银行流水" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">银行流水 / Bank Statement</div>
+      <div class="card-category">财务</div>
+    </a>
+
+    <!-- ===== 证书 / Certificate ===== -->
+    <a href="birth_certificate/template.html" class="card" data-category="certificate" data-keywords="出生证明 birth certificate 出生 证件">
+      <div class="card-img"><img src="birth_certificate/preview.png" alt="出生证明" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">出生证明 / Birth Certificate</div>
+      <div class="card-category">证书</div>
+    </a>
+
+    <a href="diploma/template.html" class="card" data-category="certificate" data-keywords="毕业证书 diploma degree 学历 教育">
+      <div class="card-img"><img src="diploma/preview.png" alt="毕业证书" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">毕业证书 / Diploma</div>
+      <div class="card-category">证书</div>
+    </a>
+
+    <a href="transcript/template.html" class="card" data-category="certificate" data-keywords="成绩单 transcript 成绩 学业">
+      <div class="card-img"><img src="transcript/preview.png" alt="成绩单" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">成绩单 / Transcript</div>
+      <div class="card-category">证书</div>
+    </a>
+
+    <a href="police_clearance/template.html" class="card" data-category="certificate" data-keywords="无犯罪证明 police clearance 无犯罪 背景调查">
+      <div class="card-img"><img src="police_clearance/preview.png" alt="无犯罪证明" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">无犯罪证明 / Police Clearance</div>
+      <div class="card-category">证书</div>
+    </a>
+
+    <!-- ===== 法律 / Legal ===== -->
+    <a href="power_of_attorney/template.html" class="card" data-category="legal" data-keywords="委托书 power of attorney 授权 委托">
+      <div class="card-img"><img src="power_of_attorney/preview.png" alt="委托书" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">委托书 / Power of Attorney</div>
+      <div class="card-category">法律</div>
+    </a>
+
+    <a href="contract/template.html" class="card" data-category="legal" data-keywords="合同 contract 协议 法律">
+      <div class="card-img"><img src="contract/preview.png" alt="合同" style="max-width:100%;max-height:100%;"></div>
+      <div class="card-title">合同 / Contract</div>
+      <div class="card-category">法律</div>
+    </a>
+
+  </div>
+</div>
+
+<script>
+function filterCategory(category) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.querySelectorAll('.card').forEach(card => {
+    if (category === 'all' || card.dataset.category === category) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function filterTemplates() {
+  const query = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.card').forEach(card => {
+    const keywords = card.dataset.keywords.toLowerCase();
+    const title = card.querySelector('.card-title').textContent.toLowerCase();
+    if (keywords.includes(query) || title.includes(query)) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>

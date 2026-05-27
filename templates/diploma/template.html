@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>毕业证书 / Diploma</title>
+<style>
+  @page {
+    size: landscape;
+    margin: 0.5in;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Microsoft YaHei", Georgia, "Times New Roman", serif;
+    background: #d4c5a9;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .diploma {
+    width: 720px;
+    min-height: 500px;
+    background:
+      linear-gradient(135deg, #fdf8f0 0%, #f5edd8 40%, #fdf8f0 60%, #f0e8d0 100%);
+    border: 5px double #8B4513;
+    padding: 40px 45px 35px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    box-shadow:
+      inset 0 0 0 2px rgba(139, 69, 19, 0.15),
+      inset 0 0 40px rgba(139, 69, 19, 0.06),
+      0 8px 32px rgba(0, 0, 0, 0.18),
+      0 2px 8px rgba(0, 0, 0, 0.10);
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  /* Watermark: repeating diagonal guilloche-like lines in gold */
+  .diploma::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 18px,
+        rgba(184, 155, 100, 0.04) 18px,
+        rgba(184, 155, 100, 0.04) 19px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 18px,
+        rgba(184, 155, 100, 0.04) 18px,
+        rgba(184, 155, 100, 0.04) 19px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 36px,
+        rgba(184, 155, 100, 0.025) 36px,
+        rgba(184, 155, 100, 0.025) 37px
+      ),
+      radial-gradient(ellipse at 50% 50%, rgba(200, 170, 110, 0.06) 0%, transparent 70%);
+  }
+
+  /* Decorative corner ornaments via ::after on diploma */
+  .diploma::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 0;
+    pointer-events: none;
+    border: 1px solid rgba(139, 69, 19, 0.18);
+    border-radius: 2px;
+  }
+
+  /* Ensure all content sits above pseudo-elements */
+  .diploma > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---- Corner ornaments via background-image on four small spans ---- */
+  .corner-ornaments {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .corner-ornaments::before,
+  .corner-ornaments::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+  }
+  .corner-ornaments::before {
+    top: -1px;
+    left: -1px;
+    border-top: 3px solid #8B4513;
+    border-left: 3px solid #8B4513;
+    border-radius: 0;
+  }
+  .corner-ornaments::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 3px solid #8B4513;
+    border-right: 3px solid #8B4513;
+    border-radius: 0;
+  }
+  .corner-ornaments-tl,
+  .corner-ornaments-br {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .corner-ornaments-tl {
+    top: 10px;
+    right: 10px;
+    border-top: 3px solid #8B4513;
+    border-right: 3px solid #8B4513;
+  }
+  .corner-ornaments-br {
+    bottom: 10px;
+    left: 10px;
+    border-bottom: 3px solid #8B4513;
+    border-left: 3px solid #8B4513;
+  }
+
+  /* ---- Header ---- */
+  .header {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.20);
+  }
+
+  .header h1 {
+    font-size: 20px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #6B3410;
+    margin-bottom: 6px;
+    font-weight: 700;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .header h2 {
+    font-size: 11px;
+    color: #8a7a60;
+    font-weight: 400;
+    letter-spacing: 1px;
+    font-style: italic;
+  }
+
+  /* ---- Decorative divider between header and body ---- */
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #b89b64;
+    font-size: 14px;
+    letter-spacing: 6px;
+    user-select: none;
+  }
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #b89b64, transparent);
+  }
+
+  /* ---- Fields ---- */
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    font-size: 10px;
+    color: #9a8a70;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+
+  .field .value {
+    font-size: 26px;
+    color: #3a2210;
+    border-bottom: 1.5px solid #8B4513;
+    padding-bottom: 4px;
+    display: inline-block;
+    min-width: 320px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .field .value.small {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    min-width: 260px;
+  }
+
+  /* ---- Program text ---- */
+  .program {
+    font-size: 13px;
+    margin: 14px 0;
+    color: #6b5c48;
+    line-height: 1.8;
+    font-style: italic;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 10px;
+  }
+
+  /* ---- Signatures ---- */
+  .signature {
+    width: 160px;
+    text-align: center;
+  }
+
+  .signature .line {
+    border-top: 1px solid #5a4a38;
+    margin-top: 55px;
+    padding-top: 6px;
+    font-size: 10px;
+    color: #5a4a38;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+  }
+
+  .signature .line strong {
+    display: block;
+    font-size: 11px;
+    color: #3a2210;
+    font-weight: 600;
+  }
+
+  /* ---- Seal Area ---- */
+  .seal-area {
+    width: 110px;
+    height: 110px;
+    border: 2.5px solid #c0392b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #c0392b;
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: relative;
+    background: radial-gradient(circle, rgba(192, 57, 43, 0.03) 0%, transparent 70%);
+    margin-bottom: 5px;
+    flex-shrink: 0;
+  }
+
+  .seal-area::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border: 1px solid rgba(192, 57, 43, 0.35);
+    border-radius: 50%;
+  }
+
+  /* ---- Print styles ---- */
+  @media print {
+    body {
+      background: none;
+      padding: 0;
+      margin: 0;
+    }
+    .diploma {
+      box-shadow: none;
+      margin: 0 auto;
+      page-break-inside: avoid;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="diploma">
+  <!-- Decorative corner L-brackets -->
+  <div class="corner-ornaments"></div>
+  <div class="corner-ornaments-tl"></div>
+  <div class="corner-ornaments-br"></div>
+
+  <div class="header">
+    <h1>{{INSTITUTION}}</h1>
+    <h2>{{INSTITUTION_ADDRESS}}</h2>
+  </div>
+
+  <div class="divider">&#9830;</div>
+
+  <div class="field">
+    <label>兹证明 / This is to certify that</label>
+    <div class="value">{{GRADUATE_NAME}}</div>
+  </div>
+
+  <div class="program">
+    已完成 /<br>
+    has successfully completed
+  </div>
+
+  <div class="field">
+    <label>学位 / Degree</label>
+    <div class="value">{{DEGREE}}</div>
+  </div>
+
+  <div class="field">
+    <label>专业 / Major</label>
+    <div class="value small">{{MAJOR}}</div>
+  </div>
+
+  <div class="field">
+    <label>毕业日期 / Graduation Date</label>
+    <div class="value small">{{GRAD_DATE}}</div>
+  </div>
+
+  <div class="footer">
+    <div class="signature">
+      <div class="line">{{DEAN_NAME}}<br><strong>院长 / Dean</strong></div>
+    </div>
+    <div class="seal-area">公章</div>
+    <div class="signature">
+      <div class="line">{{RECTORS_NAME}}<br><strong>校长 / President</strong></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

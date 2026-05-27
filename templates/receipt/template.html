@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receipt</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
+    background: #d0d0d0;
+    display: flex;
+    justify-content: center;
+    padding: 30px 10px;
+  }
+
+  .receipt {
+    width: 350px;
+    background: #fffef8;
+    padding: 18px 14px;
+    color: #111;
+    font-size: 12px;
+    line-height: 1.5;
+    position: relative;
+  }
+
+  /* Torn-edge effect at top and bottom */
+  .receipt::before,
+  .receipt::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 4px,
+      #fffef8 4px,
+      #fffef8 5px
+    );
+  }
+  .receipt::before {
+    top: -6px;
+    border-top: 2px dashed #999;
+  }
+  .receipt::after {
+    bottom: -6px;
+    border-bottom: 2px dashed #999;
+  }
+
+  /* Header */
+  .company-name {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .company-sub {
+    text-align: center;
+    font-size: 10px;
+    color: #555;
+    margin-bottom: 1px;
+  }
+
+  /* Separator */
+  .sep {
+    text-align: center;
+    margin: 6px 0;
+    color: #999;
+    letter-spacing: 2px;
+    font-size: 10px;
+    user-select: none;
+  }
+
+  /* Date / receipt number row */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  /* Items table */
+  .items {
+    margin: 6px 0 8px;
+  }
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: bold;
+    border-bottom: 1px solid #333;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+  }
+  .item-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 2px 0;
+  }
+  .item-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 4px;
+  }
+  .item-qty {
+    width: 30px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .item-price {
+    width: 60px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .item-total {
+    width: 65px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Totals */
+  .totals {
+    border-top: 1px solid #333;
+    padding-top: 6px;
+    margin-top: 4px;
+  }
+  .total-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 2px 0;
+  }
+  .total-line.grand {
+    font-size: 14px;
+    font-weight: bold;
+    border-top: 2px solid #111;
+    padding-top: 5px;
+    margin-top: 4px;
+  }
+
+  /* Payment */
+  .payment {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #444;
+  }
+  .payment div {
+    padding: 1px 0;
+  }
+
+  /* Barcode placeholder */
+  .barcode {
+    text-align: center;
+    margin: 14px 0 10px;
+  }
+  .barcode-placeholder {
+    display: inline-block;
+    border: 1px dashed #aaa;
+    padding: 8px 16px;
+    font-size: 9px;
+    color: #aaa;
+    letter-spacing: 1px;
+  }
+
+  /* Thank-you message */
+  .footer {
+    text-align: center;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed #bbb;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  /* Cut-line indicator */
+  .cut-line {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 8px;
+    color: #ccc;
+    letter-spacing: 3px;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<div class="receipt">
+
+  <div class="company-name">{{COMPANY_NAME}}</div>
+  <div class="company-sub">{{COMPANY_ADDRESS}}</div>
+  <div class="company-sub">Tel: {{COMPANY_PHONE}}</div>
+
+  <div class="sep">- - - - - - - - - - - - - - - -</div>
+
+  <div class="info-row">
+    <span>{{RECEIPT_DATE}}</span>
+    <span>#{{RECEIPT_NUMBER}}</span>
+  </div>
+
+  <div class="items">
+    <div class="item-header">
+      <span style="flex:1">Item</span>
+      <span style="width:30px;text-align:center">Qty</span>
+      <span style="width:60px;text-align:right">Price</span>
+      <span style="width:65px;text-align:right">Total</span>
+    </div>
+    <div class="item-line">
+      <span class="item-name">{{ITEM_1_NAME}}</span>
+      <span class="item-qty">{{ITEM_1_QTY}}</span>
+      <span class="item-price">{{ITEM_1_PRICE}}</span>
+      <span class="item-total">{{ITEM_1_TOTAL}}</span>
+    </div>
+    <div class="item-line">
+      <span class="item-name">{{ITEM_2_NAME}}</span>
+      <span class="item-qty">{{ITEM_2_QTY}}</span>
+      <span class="item-price">{{ITEM_2_PRICE}}</span>
+      <span class="item-total">{{ITEM_2_TOTAL}}</span>
+    </div>
+    <div class="item-line">
+      <span class="item-name">{{ITEM_3_NAME}}</span>
+      <span class="item-qty">{{ITEM_3_QTY}}</span>
+      <span class="item-price">{{ITEM_3_PRICE}}</span>
+      <span class="item-total">{{ITEM_3_TOTAL}}</span>
+    </div>
+  </div>
+
+  <div class="totals">
+    <div class="total-line">
+      <span>Subtotal</span>
+      <span>{{SUBTOTAL}}</span>
+    </div>
+    <div class="total-line">
+      <span>Tax ({{TAX_RATE}}%)</span>
+      <span>{{TAX}}</span>
+    </div>
+    <div class="total-line grand">
+      <span>TOTAL</span>
+      <span>{{TOTAL}}</span>
+    </div>
+  </div>
+
+  <div class="payment">
+    <div>Payment: {{PAYMENT_METHOD}}</div>
+  </div>
+
+  <div class="barcode">
+    <div class="barcode-placeholder">||||| BARCODE |||||</div>
+  </div>
+
+  <div class="footer">
+    Thank you for your purchase!<br>
+    Please keep this receipt.
+  </div>
+
+  <div class="cut-line">- - - - - - - CUT HERE - - - - - - -</div>
+
+</div>
+</body>
+</html>

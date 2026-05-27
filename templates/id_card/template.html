@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>身份证 / ID Card</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+    background: #e8e8e8;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .id-card {
+    width: 560px;
+    height: 340px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+
+  .side-label {
+    position: absolute;
+    top: 6px;
+    left: 12px;
+    font-size: 9px;
+    color: rgba(0,0,0,0.18);
+    font-weight: bold;
+    letter-spacing: 1px;
+    z-index: 10;
+  }
+
+  /* ====== FRONT SIDE ====== */
+  .front {
+    background: linear-gradient(135deg, #e8f4fd 0%, #d6eaf8 25%, #ffffff 50%, #dceefb 75%, #cde4f7 100%);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* Guilloche pattern overlay */
+  .front::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(100,160,210,0.03) 2px,
+        rgba(100,160,210,0.03) 4px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 2px,
+        rgba(100,160,210,0.03) 2px,
+        rgba(100,160,210,0.03) 4px
+      ),
+      radial-gradient(ellipse at 30% 50%, rgba(180,215,240,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 30%, rgba(160,200,235,0.2) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Circular guilloche motifs */
+  .front::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, transparent 60px, rgba(150,195,230,0.06) 61px, rgba(150,195,230,0.06) 62px, transparent 63px),
+      radial-gradient(circle, transparent 80px, rgba(150,195,230,0.05) 81px, rgba(150,195,230,0.05) 82px, transparent 83px),
+      radial-gradient(circle, transparent 100px, rgba(150,195,230,0.04) 101px, rgba(150,195,230,0.04) 102px, transparent 103px),
+      radial-gradient(circle, transparent 120px, rgba(150,195,230,0.03) 121px, rgba(150,195,230,0.03) 122px, transparent 123px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .front-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .emblem {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid #c41e3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #c41e3a;
+    background: radial-gradient(circle, #fff5f5, #ffeaea);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #c41e3a;
+    letter-spacing: 8px;
+    text-indent: 8px;
+  }
+
+  .front-body {
+    display: flex;
+    padding: 14px 24px 16px;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+
+  .front-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+  }
+
+  .field-row {
+    display: flex;
+    align-items: baseline;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .field-label {
+    color: #333;
+    font-weight: normal;
+    white-space: nowrap;
+    min-width: 70px;
+  }
+
+  .field-value {
+    color: #000;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    flex: 1;
+    padding-bottom: 1px;
+    min-height: 1.2em;
+    padding-left: 2px;
+  }
+
+  .field-row-inline {
+    display: flex;
+    gap: 16px;
+  }
+
+  .field-row-inline .field-row {
+    flex: 1;
+  }
+
+  .field-row-inline .field-row .field-label {
+    min-width: 30px;
+  }
+
+  .id-number-row {
+    margin-top: 4px;
+  }
+
+  .id-number-row .field-label {
+    min-width: 100px;
+  }
+
+  .photo-area {
+    width: 110px;
+    height: 140px;
+    border: 1px solid rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #aaa;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.5);
+    align-self: center;
+  }
+
+  /* ====== BACK SIDE ====== */
+  .back {
+    background: linear-gradient(135deg, #1a8a7d 0%, #1b9e8e 25%, #1aab9a 50%, #1b9e8e 75%, #18867a 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Guilloche pattern for back */
+  .back::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-linear-gradient(
+        30deg,
+        transparent,
+        transparent 3px,
+        rgba(255,255,255,0.04) 3px,
+        rgba(255,255,255,0.04) 5px
+      ),
+      repeating-linear-gradient(
+        -30deg,
+        transparent,
+        transparent 3px,
+        rgba(255,255,255,0.04) 3px,
+        rgba(255,255,255,0.04) 5px
+      ),
+      radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .back-content {
+    position: relative;
+    z-index: 1;
+    padding: 28px 24px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .back .field-row {
+    font-size: 13px;
+    color: #fff;
+  }
+
+  .back .field-label {
+    color: rgba(255,255,255,0.85);
+    min-width: 80px;
+  }
+
+  .back .field-value {
+    color: #fff;
+    border-bottom-color: rgba(255,255,255,0.3);
+    font-weight: normal;
+  }
+
+  .barcode-area {
+    margin-top: 10px;
+    height: 44px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 16px;
+  }
+
+  .barcode-area .bar {
+    background: #1a1a1a;
+    height: 30px;
+    border-radius: 0.5px;
+  }
+
+  .barcode-text {
+    position: absolute;
+    bottom: 6px;
+    right: 24px;
+    font-size: 8px;
+    color: rgba(255,255,255,0.4);
+    z-index: 1;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<!-- FRONT SIDE -->
+<div class="id-card front">
+  <div class="side-label">正面 FRONT</div>
+  <div class="front-header">
+    <div class="emblem">国徽</div>
+    <div class="card-title">居民身份证</div>
+  </div>
+  <div class="front-body">
+    <div class="front-fields">
+      <div class="field-row">
+        <span class="field-label">姓  名</span>
+        <span class="field-value">{{NAME}}</span>
+      </div>
+      <div class="field-row field-row-inline">
+        <div class="field-row">
+          <span class="field-label">性  别</span>
+          <span class="field-value">{{SEX}}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">民  族</span>
+          <span class="field-value">{{ETHNICITY}}</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">出  生</span>
+        <span class="field-value">{{DOB}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-label">住  址</span>
+        <span class="field-value">{{ADDRESS}}</span>
+      </div>
+      <div class="field-row id-number-row">
+        <span class="field-label">公民身份号码</span>
+        <span class="field-value">{{ID_NUMBER}}</span>
+      </div>
+    </div>
+    <div class="photo-area">照片</div>
+  </div>
+</div>
+
+<!-- BACK SIDE -->
+<div class="id-card back">
+  <div class="side-label">背面 BACK</div>
+  <div class="back-content">
+    <div class="field-row">
+      <span class="field-label">签发机关</span>
+      <span class="field-value">{{ISSUING_AUTHORITY}}</span>
+    </div>
+    <div class="field-row">
+      <span class="field-label">有效期限</span>
+      <span class="field-value">{{VALID_FROM}} — {{VALID_TO}}</span>
+    </div>
+    <div class="barcode-area" id="barcode"></div>
+  </div>
+  <div class="barcode-text">CHN</div>
+</div>
+
+<script>
+// Generate realistic barcode lines
+(function() {
+  var bc = document.getElementById('barcode');
+  if (!bc) return;
+  var widths = [2,1,1,3,1,2,1,1,3,1,2,1,1,1,3,1,2,1,1,2,1,3,1,1,2,1,1,3,1,2,1,1,1,2,1,1,3,1,2,1,1,2,1,3,1,1,2,1];
+  for (var i = 0; i < widths.length; i++) {
+    var bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.width = widths[i] + 'px';
+    bc.appendChild(bar);
+  }
+})();
+</script>
+
+</body>
+</html>

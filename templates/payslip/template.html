@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工资单 / Payslip</title>
+<style>
+  :root {
+    --accent: #1a5276;
+    --accent-light: #2980b9;
+    --accent-bg: #eaf2f8;
+    --accent-gradient: linear-gradient(135deg, #1a5276 0%, #2980b9 100%);
+    --earnings-color: #1e8449;
+    --earnings-bg: #eafaf1;
+    --deductions-color: #922b21;
+    --deductions-bg: #fdedec;
+    --border-color: #d5d8dc;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --bg-alt-row: #f8f9fa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    background: #e8ecef;
+    padding: 30px 20px;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  /* ========== Main Container ========== */
+  .payslip {
+    width: 680px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.08),
+      0 4px 12px rgba(0,0,0,0.10),
+      0 12px 36px rgba(0,0,0,0.08);
+    position: relative;
+  }
+
+  /* Watermark pattern */
+  .payslip::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 28px,
+        rgba(26,82,118,0.015) 28px,
+        rgba(26,82,118,0.015) 29px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 28px,
+        rgba(26,82,118,0.015) 28px,
+        rgba(26,82,118,0.015) 29px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .payslip > * { position: relative; z-index: 1; }
+
+  /* ========== Header ========== */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    background: var(--accent-gradient);
+    color: #fff;
+    padding: 22px 28px;
+  }
+
+  .company h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  .company div {
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+  }
+
+  .period {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .period .title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: #fff;
+  }
+
+  .period div {
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ========== Employee Info Box ========== */
+  .info-row {
+    display: flex;
+    gap: 0;
+    margin: 0;
+    font-size: 11px;
+    background: var(--accent-bg);
+    border-left: 4px solid var(--accent);
+    padding: 14px 20px;
+    margin: 0 24px;
+    margin-top: 20px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .field {
+    flex: 1;
+    padding-right: 12px;
+  }
+
+  .field:not(:last-child) {
+    border-right: 1px solid rgba(26,82,118,0.12);
+    padding-right: 16px;
+    margin-right: 4px;
+  }
+
+  .field label {
+    font-size: 9px;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .field .value {
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-primary);
+  }
+
+  /* ========== Tables Section ========== */
+  .tables {
+    display: flex;
+    gap: 20px;
+    padding: 20px 24px 0;
+  }
+
+  .table-section {
+    flex: 1;
+  }
+
+  .table-section h3 {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Earnings header */
+  .table-section:nth-child(1) h3 {
+    background: var(--earnings-color);
+    color: #fff;
+  }
+
+  /* Deductions header */
+  .table-section:nth-child(2) h3 {
+    background: var(--deductions-color);
+    color: #fff;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  th, td {
+    border-bottom: 1px solid var(--border-color);
+    padding: 6px 10px;
+    text-align: left;
+  }
+
+  th {
+    background: #f4f6f7;
+    font-weight: 700;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  /* Alternating row colors */
+  tbody tr:nth-child(even),
+  tr:nth-child(even) {
+    background: var(--bg-alt-row);
+  }
+
+  /* Remove border on last row (total row) */
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td.amount {
+    text-align: right;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 10px;
+  }
+
+  .total-row td {
+    font-weight: 700;
+    border-top: 2px solid var(--text-primary);
+    background: #f9f9f9 !important;
+    font-size: 11px;
+  }
+
+  /* Earnings total accent */
+  .table-section:nth-child(1) .total-row td {
+    color: var(--earnings-color);
+  }
+
+  /* Deductions total accent */
+  .table-section:nth-child(2) .total-row td {
+    color: var(--deductions-color);
+  }
+
+  /* ========== Net Pay Section ========== */
+  .net-pay {
+    margin: 20px 24px 24px;
+    background: var(--accent-gradient);
+    color: #fff;
+    border-radius: 6px;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow:
+      0 2px 8px rgba(26,82,118,0.25),
+      0 1px 3px rgba(26,82,118,0.15);
+  }
+
+  .net-pay .label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .net-pay .amount {
+    font-size: 24px;
+    font-weight: 800;
+    font-family: "Consolas", "Courier New", monospace;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  /* ========== Footer ========== */
+  .footer-note {
+    font-size: 9px;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 0 24px 18px;
+    line-height: 1.5;
+  }
+
+  /* ========== Print Styles ========== */
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+
+  @media print {
+    body {
+      background: #fff;
+      padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color-adjust: exact;
+    }
+
+    .payslip {
+      width: 100%;
+      box-shadow: none;
+      border: 1px solid #ccc;
+    }
+
+    .payslip::before {
+      background: none;
+    }
+
+    .header {
+      background: var(--accent) !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .table-section h3,
+    .net-pay,
+    .total-row td {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .net-pay {
+      box-shadow: none;
+      border: 1px solid var(--accent);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .payslip { width: 100%; }
+    .tables { flex-direction: column; gap: 12px; }
+    .info-row { flex-wrap: wrap; }
+    .field { min-width: 45%; }
+    .header { flex-direction: column; gap: 10px; }
+    .period { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="payslip">
+  <div class="header">
+    <div class="company">
+      <h1>{{COMPANY_NAME}}</h1>
+      <div>{{COMPANY_ADDRESS}}</div>
+    </div>
+    <div class="period">
+      <div class="title">工资单 / PAYSLIP</div>
+      <div>期间: {{PAY_PERIOD}}</div>
+      <div>编号: {{PAYSLIP_NUMBER}}</div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <div class="field"><label>姓名 / Name</label><div class="value">{{EMPLOYEE_NAME}}</div></div>
+    <div class="field"><label>工号 / ID</label><div class="value">{{EMPLOYEE_ID}}</div></div>
+    <div class="field"><label>部门 / Department</label><div class="value">{{DEPARTMENT}}</div></div>
+    <div class="field"><label>职位 / Position</label><div class="value">{{POSITION}}</div></div>
+  </div>
+
+  <div class="tables">
+    <div class="table-section">
+      <h3>应得收入 / Earnings</h3>
+      <table>
+        <tr><th>项目</th><th class="amount">金额</th></tr>
+        <tr><td>基本工资 / Base Salary</td><td class="amount">{{BASE_SALARY}}</td></tr>
+        <tr><td>加班费 / Overtime</td><td class="amount">{{OVERTIME}}</td></tr>
+        <tr><td>奖金 / Bonus</td><td class="amount">{{BONUS}}</td></tr>
+        <tr><td>津贴 / Allowance</td><td class="amount">{{ALLOWANCE}}</td></tr>
+        <tr class="total-row"><td>合计 / Total</td><td class="amount">{{TOTAL_EARNINGS}}</td></tr>
+      </table>
+    </div>
+    <div class="table-section">
+      <h3>扣减项目 / Deductions</h3>
+      <table>
+        <tr><th>项目</th><th class="amount">金额</th></tr>
+        <tr><td>养老保险 / Pension</td><td class="amount">{{PENSION}}</td></tr>
+        <tr><td>医疗保险 / Medical</td><td class="amount">{{MEDICAL}}</td></tr>
+        <tr><td>失业保险 / Unemployment</td><td class="amount">{{UNEMPLOYMENT}}</td></tr>
+        <tr><td>住房公积金 / Housing Fund</td><td class="amount">{{HOUSING_FUND}}</td></tr>
+        <tr><td>个人所得税 / Income Tax</td><td class="amount">{{INCOME_TAX}}</td></tr>
+        <tr class="total-row"><td>合计 / Total</td><td class="amount">{{TOTAL_DEDUCTIONS}}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="net-pay">
+    <div class="label">实发工资 / Net Pay</div>
+    <div class="amount">{{NET_PAY}}</div>
+  </div>
+</div>
+</body>
+</html>

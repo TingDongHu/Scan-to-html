@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>签证 / Visa</title>
+<style>
+  @page {
+    size: 115mm 80mm;
+    margin: 0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Microsoft YaHei", "SimSun", "Songti SC", Arial, sans-serif;
+    background: #e8e4de;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  /* === Visa Sticker === */
+  .visa {
+    width: 450px;
+    height: 315px; /* ~80mm at screen scale */
+    background: linear-gradient(175deg, #fafaf7 0%, #f5f4f0 40%, #f0efe8 100%);
+    border: 1.5px solid #8a7e6e;
+    border-radius: 3px;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.12),
+      0 4px 12px rgba(0,0,0,0.10),
+      0 8px 28px rgba(0,0,0,0.08),
+      inset 0 0 60px rgba(139,115,85,0.04);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  /* === Watermark Pattern (guilloche-like) === */
+  .visa::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 25% 40%, rgba(30,60,114,0.03) 0%, transparent 50%),
+      radial-gradient(circle at 75% 60%, rgba(30,60,114,0.025) 0%, transparent 50%),
+      repeating-linear-gradient(
+        30deg,
+        transparent,
+        transparent 14px,
+        rgba(30,60,114,0.012) 14px,
+        rgba(30,60,114,0.012) 15px
+      ),
+      repeating-linear-gradient(
+        -30deg,
+        transparent,
+        transparent 14px,
+        rgba(30,60,114,0.008) 14px,
+        rgba(30,60,114,0.008) 15px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === Decorative Concentric Arcs === */
+  .visa::after {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -15%;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(30,60,114,0.04);
+    box-shadow:
+      inset 0 0 0 18px transparent,
+      inset 0 0 0 36px rgba(30,60,114,0.025),
+      inset 0 0 0 54px transparent,
+      inset 0 0 0 72px rgba(30,60,114,0.02),
+      inset 0 0 0 90px transparent,
+      inset 0 0 0 108px rgba(30,60,114,0.015),
+      inset 0 0 0 126px transparent,
+      inset 0 0 0 144px rgba(30,60,114,0.01),
+      inset 0 0 0 162px transparent,
+      inset 0 0 0 180px rgba(30,60,114,0.008);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .visa > * { position: relative; z-index: 1; }
+
+  /* === Navy Header Bar === */
+  .header {
+    background: linear-gradient(135deg, #1e3c72 0%, #162d5a 50%, #1e3c72 100%);
+    color: #fff;
+    text-align: center;
+    padding: 8px 16px 7px;
+    border-bottom: 2px solid #0f2340;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    position: relative;
+  }
+
+  .header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+
+  .header h1.zh {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    margin: 0;
+    font-family: "SimSun", "Songti SC", serif;
+  }
+
+  .header h1.en {
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .header .country-code {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    opacity: 0.85;
+  }
+
+  /* === Main Content === */
+  .content {
+    display: flex;
+    padding: 10px 16px 0 16px;
+    gap: 14px;
+  }
+
+  /* === Photo Area === */
+  .photo-area {
+    width: 95px;
+    height: 120px;
+    border: 1.5px solid #9a9080;
+    border-radius: 2px;
+    background: #fff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .photo-area .photo-placeholder {
+    color: #b0a898;
+    font-size: 10px;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .photo-area .photo-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1.5px dashed #c8c0b0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c8c0b0;
+    font-size: 13px;
+  }
+
+  /* === Fields Area === */
+  .fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .field {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 3px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 7.5px;
+    color: #7a7060;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+
+  .field .value {
+    font-size: 10.5px;
+    color: #1a1a1a;
+    border-bottom: 0.5px solid #c0b8a8;
+    padding: 1px 0 1px 0;
+    min-height: 15px;
+    line-height: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .row .field {
+    flex: 1;
+  }
+
+  /* === Separator Line === */
+  .separator {
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent, #b8a888, transparent);
+    margin: 4px 16px;
+  }
+
+  /* === Footer === */
+  .footer {
+    display: flex;
+    gap: 12px;
+    padding: 0 16px 8px;
+  }
+
+  .footer .field {
+    flex: 1;
+  }
+
+  .footer .field .value {
+    font-size: 9.5px;
+  }
+
+  /* === MRZ Zone === */
+  .mrz-zone {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, #f0ece4 0%, #e8e2d8 100%);
+    border-top: 1px solid #c8bfa8;
+    padding: 4px 16px 6px;
+  }
+
+  .mrz-label {
+    font-size: 6px;
+    color: #9a9080;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+
+  .mrz-lines {
+    font-family: "OCR-B", "Consolas", "Courier New", monospace;
+    font-size: 9.5px;
+    line-height: 1.4;
+    color: #2a2a2a;
+    letter-spacing: 1px;
+    word-break: break-all;
+  }
+
+  .mrz-lines .mrz-line {
+    display: block;
+    white-space: pre;
+  }
+
+  /* === Print Styles === */
+  @media print {
+    body { background: none; padding: 0; }
+    .visa {
+      box-shadow: none;
+      border: 1px solid #8a7e6e;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="visa">
+
+  <!-- Navy Header Bar -->
+  <div class="header">
+    <h1 class="zh">签证</h1>
+    <h1 class="en">VISA</h1>
+    <span class="country-code">{{COUNTRY_CODE}}</span>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Photo Area -->
+    <div class="photo-area">
+      <div class="photo-icon">&#9673;</div>
+      <div class="photo-placeholder">照片<br>PHOTO</div>
+    </div>
+
+    <!-- Data Fields -->
+    <div class="fields">
+
+      <!-- Row: Type + Visa Number -->
+      <div class="row">
+        <div class="field">
+          <label>签证类型 / Type</label>
+          <div class="value">{{VISA_TYPE}}</div>
+        </div>
+        <div class="field">
+          <label>签证号码 / Number</label>
+          <div class="value">{{VISA_NUMBER}}</div>
+        </div>
+      </div>
+
+      <!-- Row: Full Name -->
+      <div class="field">
+        <label>姓名 / Name</label>
+        <div class="value">{{FULL_NAME}}</div>
+      </div>
+
+      <!-- Row: Passport Number -->
+      <div class="field">
+        <label>护照号码 / Passport Number</label>
+        <div class="value">{{PASSPORT_NUMBER}}</div>
+      </div>
+
+      <!-- Row: Entry Date + Exit Date -->
+      <div class="row">
+        <div class="field">
+          <label>入境日期 / Entry Date</label>
+          <div class="value">{{ENTRY_DATE}}</div>
+        </div>
+        <div class="field">
+          <label>出境日期 / Exit Date</label>
+          <div class="value">{{EXIT_DATE}}</div>
+        </div>
+      </div>
+
+      <!-- Row: Entries + Duration -->
+      <div class="row">
+        <div class="field">
+          <label>允许入境次数 / Entries</label>
+          <div class="value">{{ENTRIES}}</div>
+        </div>
+        <div class="field">
+          <label>有效期 / Duration</label>
+          <div class="value">{{DURATION}}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="field">
+      <label>签发机关 / Issued by</label>
+      <div class="value">{{ISSUING_AUTHORITY}}</div>
+    </div>
+    <div class="field">
+      <label>签发日期 / Date of Issue</label>
+      <div class="value">{{ISSUE_DATE}}</div>
+    </div>
+  </div>
+
+  <!-- Machine Readable Zone -->
+  <div class="mrz-zone">
+    <div class="mrz-label">Machine Readable Zone / 机读码</div>
+    <div class="mrz-lines">
+      <span class="mrz-line">{{MRZ_LINE_1}}</span>
+      <span class="mrz-line">{{MRZ_LINE_2}}</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
