@@ -20,11 +20,13 @@ Rebuild scanned or image-based documents as static HTML by treating the source a
 
 ```bash
 pip install pymupdf pillow html2image
+npm install -g mineru-open-api
 ```
 
 - **PyMuPDF** (`pymupdf`): PDF to high-res image export
 - **Pillow** (`pillow`): Image cropping and inspection
 - **html2image**: Preview generation (requires Chrome, Chromium, or Edge browser installed)
+- **mineru-open-api**: MinerU document extraction CLI (see MinerU-Enhanced Workflow)
 
 ## Core Workflow
 
@@ -98,6 +100,63 @@ Once table column widths are fixed, go back to the original ultra-high-res image
    - **Zip**: run `python pipeline/package_output.py` to create a self-contained zip
 4. Let the user choose which format they prefer
 
+## Core Workflow (MinerU-Enhanced)
+
+All documents go through MinerU for content extraction, then Claude for semantic layout and OCR correction.
+
+**Step 0 — MinerU Extraction**
+
+```bash
+mineru-open-api extract document.pdf -f html -o mineru_output/ \
+  --language cyrillic --model vlm
+```
+
+80+ languages supported. For Chinese use `--language ch`, for English `--language en`, etc.
+
+**Step 1 — Parse to Skeleton**
+
+```bash
+python pipeline/mineru_parse.py mineru_output/document.html \
+  --template templates/cmr/skeleton.json \
+  --output partial_skeleton.json
+```
+
+If a template exists for the document type (CMR, invoice, etc.), use `--template` to get
+accurate field mapping. Otherwise, mineru_parse.py generates a generic skeleton from the
+HTML structure — Claude will restructure it in the next step.
+
+**Step 2 — Claude Review & Correct**
+
+Claude reads `partial_skeleton.json` alongside the MinerU HTML output and:
+- Fixes OCR errors
+- Reassigns text to correct fields
+- Adds `pair_id` to left/right sections for 2-column pairing
+- Marks full-width sections (`full_width: true`)
+
+**Step 3 — Render HTML**
+
+```bash
+python pipeline/render_skeleton.py filled_skeleton.json --output document.html
+```
+
+### Fallback: Vision-First (MinerU unavailable)
+
+If mineru-open-api is not installed or the API is unreachable, fall back to Claude Vision:
+
+```
+PDF → export_pdf.py → full_page.png → Claude Vision → skeleton.json
+  → auto_crop.py → Claude Vision per-crop → filled_skeleton.json
+  → render_skeleton.py → document.html
+```
+
+### Skeleton-Driven Scripts
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `pipeline/mineru_parse.py` | MinerU HTML → skeleton | `python pipeline/mineru_parse.py doc.html --template tmpl.json` |
+| `pipeline/render_skeleton.py` | Skeleton → HTML | `python pipeline/render_skeleton.py skeleton.json` |
+| `pipeline/export_pdf.py` | PDF → high-res PNG | `python pipeline/export_pdf.py input.pdf [zoom]` |
+
 ## Quick Scripts
 
 ### One-Click Export
@@ -148,9 +207,12 @@ scan-to-html/
 ├── pipeline/               # Processing scripts
 │   ├── export_pdf.py       # PDF → high-res PNG
 │   ├── auto_crop.py        # Auto grid crop
+│   ├── mineru_parse.py     # MinerU HTML → skeleton
+│   ├── render_skeleton.py  # Skeleton → HTML
 │   ├── list_templates.py   # Template discovery
 │   ├── generate_previews.py# Preview generation
-│   └── package_output.py   # Output packaging
+│   ├── package_output.py   # Output packaging
+│   └── skeleton_schema.json# Skeleton JSON schema
 ├── templates/              # 18 document templates
 │   ├── index.html          # Visual template browser
 │   └── [category]/         # template.html + preview.png

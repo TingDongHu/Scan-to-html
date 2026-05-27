@@ -12,6 +12,7 @@
 
 ```bash
 pip install pymupdf pillow html2image
+npm install -g mineru-open-api
 ```
 
 需要系统安装 Chrome、Chromium 或 Edge 浏览器（用于预览生成）。
@@ -25,6 +26,53 @@ pip install pymupdf pillow html2image
 | `pipeline/list_templates.py` | 发现可用模板 | `python pipeline/list_templates.py [--search 关键词]` |
 | `pipeline/generate_previews.py` | 生成模板预览图 | `python pipeline/generate_previews.py` |
 | `pipeline/package_output.py` | 打包输出为zip | `python pipeline/package_output.py [目录] [文件名]` |
+
+### Skeleton-Driven Scripts (Vision-First)
+
+| 脚本 | 用途 | 用法 |
+|------|------|------|
+| `pipeline/render_skeleton.py` | 骨架→HTML | `python pipeline/render_skeleton.py skeleton.json` |
+| `pipeline/mineru_parse.py` | MinerU HTML→骨架 | `python pipeline/mineru_parse.py doc.html --template tmpl.json` |
+
+### MinerU增强工作流（默认）
+
+所有文档统一使用MinerU提取内容，Claude负责语义排版和OCR修正：
+
+```bash
+# Step 0: MinerU提取
+mineru-open-api extract document.pdf -f html -o mineru_output/ \
+  --language cyrillic --model vlm
+
+# Step 1: 解析为骨架
+python pipeline/mineru_parse.py mineru_output/document.html \
+  --template templates/cmr/skeleton.json \
+  --output partial_skeleton.json
+
+# Step 2: Claude审核修正
+# - 修正OCR错误
+# - 重新分配字段内容
+# - 添加pair_id实现双栏配对
+# - 标记full_width全宽区域
+
+# Step 3: 渲染HTML
+python pipeline/render_skeleton.py filled_skeleton.json --output document.html
+```
+
+如有模板（如CMR）用 `--template` 获得精确字段映射；无模板则自动生成通用骨架，Claude在Step 2重构。
+
+### 降级方案（MinerU不可用时）
+
+```
+PDF → export_pdf.py → 高清PNG → Claude Vision分析布局 → skeleton.json
+  → auto_crop.py裁剪 → Claude Vision逐区域识别 → filled_skeleton.json
+  → render_skeleton.py → document.html
+```
+
+### 输入模式
+
+- **全自动**: `/scan-to-html @document.pdf` — PDF转图→Vision分析→填充→HTML
+- **手动切割**: `/scan-to-html @sections/*.png` — 用户已切割→直接识别→HTML
+- **混合**: 两者都提供 → 合并识别
 
 ## 模板库
 

@@ -1,0 +1,16 @@
+{
+  "doc": "test",
+  "page": {"width": 2481, "height": 3508},
+  "sections": [
+    {
+      "id": "overlap_a",
+      "pos": {"x": 0, "y": 0, "w": 50, "h": 50, "unit": "%"},
+      "fields": []
+    },
+    {
+      "id": "overlap_b",
+      "pos": {"x": 25, "y": 25, "w": 50, "h": 50, "unit": "%"},
+      "fields": []
+    }
+  ]
+}

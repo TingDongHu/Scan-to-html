@@ -1,0 +1,202 @@
+{
+  "doc": "cmr",
+  "page": {
+    "width": 1786,
+    "height": 2526
+  },
+  "sections": [
+    {
+      "id": "header",
+      "label": "CMR Header",
+      "pair_id": "row1",
+      "pos": { "x": 0, "y": 0, "w": 50, "h": 3.2, "unit": "%" },
+      "fields": [
+        { "id": "title", "bbox": [10, 10, 500, 70], "style": ["bold", "center"], "value": "" }
+      ]
+    },
+    {
+      "id": "right_header",
+      "label": "CMR Note / Информация",
+      "pair_id": "row1",
+      "pos": { "x": 50, "y": 0, "w": 50, "h": 4.9, "unit": "%" },
+      "fields": [
+        { "id": "cmr_note", "bbox": [20, 10, 500, 100], "style": ["center"], "value": "" },
+        { "id": "cmr_number", "bbox": [300, 10, 200, 40], "style": ["bold"], "value": "" }
+      ]
+    },
+    {
+      "id": "sender",
+      "label": "§1 Отправитель / Sender / Expediteur",
+      "pair_id": "row2",
+      "pos": { "x": 0, "y": 3.2, "w": 35, "h": 10.5, "unit": "%" },
+      "fields": [
+        { "id": "sender_name", "bbox": [20, 15, 500, 40], "style": ["bold"], "value": "" },
+        { "id": "sender_inn", "bbox": [20, 55, 350, 25], "value": "" },
+        { "id": "sender_address", "bbox": [20, 80, 500, 80], "value": "" },
+        { "id": "sender_phone", "bbox": [20, 160, 300, 25], "value": "" }
+      ]
+    },
+    {
+      "id": "carrier_main",
+      "label": "§16 Перевозчик / Carrier / Transporteur",
+      "pair_id": "row2",
+      "pos": { "x": 50, "y": 4.9, "w": 50, "h": 8.7, "unit": "%" },
+      "fields": [
+        { "id": "carrier_main_name", "bbox": [20, 15, 500, 40], "style": ["bold"], "value": "" },
+        { "id": "carrier_main_address", "bbox": [20, 55, 500, 60], "value": "" },
+        { "id": "carrier_main_info", "bbox": [20, 115, 300, 25], "value": "" }
+      ]
+    },
+    {
+      "id": "recipient",
+      "label": "§2 Получатель / Consignee / Destinataire",
+      "pair_id": "row3",
+      "pos": { "x": 0, "y": 13.7, "w": 35, "h": 6.3, "unit": "%" },
+      "fields": [
+        { "id": "recipient_name", "bbox": [20, 15, 500, 40], "style": ["bold"], "value": "" },
+        { "id": "recipient_address", "bbox": [20, 55, 500, 60], "value": "" },
+        { "id": "recipient_country", "bbox": [20, 115, 200, 25], "value": "" }
+      ]
+    },
+    {
+      "id": "subsequent_carrier",
+      "label": "§17 Последующий перевозчик / Subsequent Carrier",
+      "pair_id": "row3",
+      "pos": { "x": 50, "y": 13.7, "w": 50, "h": 6.3, "unit": "%" },
+      "fields": [
+        { "id": "sub_carrier_name", "bbox": [20, 15, 500, 40], "value": "" },
+        { "id": "sub_carrier_address", "bbox": [20, 55, 500, 60], "value": "" },
+        { "id": "sub_carrier_info", "bbox": [20, 115, 300, 25], "value": "" }
+      ]
+    },
+    {
+      "id": "carrier_subsequent",
+      "label": "§3 Последующий перевозчик / Subsequent Carrier",
+      "pair_id": "row4",
+      "pos": { "x": 0, "y": 20.0, "w": 35, "h": 9, "unit": "%" },
+      "fields": [
+        { "id": "carrier_name", "bbox": [20, 15, 500, 30], "value": "" },
+        { "id": "carrier_address", "bbox": [20, 45, 500, 60], "value": "" },
+        { "id": "carrier_info", "bbox": [20, 105, 300, 25], "value": "" }
+      ]
+    },
+    {
+      "id": "right_middle",
+      "label": "§4 Место погрузки / Place of loading + §5 Документы / Docs",
+      "pair_id": "row4",
+      "pos": { "x": 50, "y": 20.0, "w": 50, "h": 9, "unit": "%" },
+      "fields": [
+        { "id": "loading_place", "bbox": [20, 15, 500, 60], "value": "" },
+        { "id": "attached_docs", "bbox": [20, 80, 500, 80], "value": "" }
+      ]
+    },
+    {
+      "id": "goods_table",
+      "label": "§6-§12 Информация о грузе / Goods Description",
+      "full_width": true,
+      "pos": { "x": 0, "y": 29, "w": 100, "h": 28, "unit": "%" },
+      "table": {
+        "headers": ["§6 Marks", "§7 Qty", "§8 Packaging", "§9 Name of goods", "§10 Stat#", "§11 Gross kg", "§12 Volume m³"],
+        "rows": [
+          { "cells": [
+            { "bbox": [10, 30, 180, 100], "value": "", "style": ["center"] },
+            { "bbox": [190, 30, 60, 100], "value": "", "style": ["center"] },
+            { "bbox": [250, 30, 80, 100], "value": "", "style": ["center"] },
+            { "bbox": [330, 30, 300, 100], "value": "", "style": ["center"] },
+            { "bbox": [630, 30, 100, 100], "value": "", "style": ["center"] },
+            { "bbox": [730, 30, 100, 100], "value": "", "style": ["center"] },
+            { "bbox": [830, 30, 100, 100], "value": "", "style": ["center"] }
+          ]},
+          { "cells": [
+            { "bbox": [10, 130, 180, 60], "value": "", "style": ["center"] },
+            { "bbox": [190, 130, 60, 60], "value": "", "style": ["center"] },
+            { "bbox": [250, 130, 80, 60], "value": "", "style": ["center"] },
+            { "bbox": [330, 130, 300, 60], "value": "", "style": ["center"] },
+            { "bbox": [630, 130, 100, 60], "value": "", "style": ["center"] },
+            { "bbox": [730, 130, 100, 60], "value": "", "style": ["center"] },
+            { "bbox": [830, 130, 100, 60], "value": "", "style": ["center"] }
+          ]}
+        ]
+      },
+      "fields": [
+        { "id": "container_info", "bbox": [20, 400, 500, 100], "style": ["bold"], "value": "" },
+        { "id": "dangerous_goods", "bbox": [600, 400, 250, 100], "value": "" },
+        { "id": "total_gross", "bbox": [730, 520, 100, 30], "style": ["bold"], "value": "" },
+        { "id": "total_volume", "bbox": [830, 520, 100, 30], "style": ["bold"], "value": "" }
+      ]
+    },
+    {
+      "id": "sender_instructions",
+      "label": "§13 Заявления отправителя / Sender's Instructions",
+      "pair_id": "row6",
+      "pos": { "x": 0, "y": 57, "w": 50, "h": 17, "unit": "%" },
+      "fields": [
+        { "id": "sender_instr", "bbox": [20, 15, 600, 200], "value": "" },
+        { "id": "declared_value", "bbox": [20, 220, 400, 50], "value": "" },
+        { "id": "additional_charges", "bbox": [20, 275, 400, 50], "value": "" }
+      ]
+    },
+    {
+      "id": "carrier_notes_payment",
+      "label": "§18 Оговорки + §19 Платежи",
+      "pair_id": "row6",
+      "pos": { "x": 50, "y": 57, "w": 50, "h": 17, "unit": "%" },
+      "fields": [
+        { "id": "carrier_remarks", "bbox": [20, 15, 600, 150], "value": "" },
+        { "id": "payment_info", "bbox": [20, 170, 600, 100], "style": ["bold"], "value": "" }
+      ]
+    },
+    {
+      "id": "return_section",
+      "label": "§14 Возврат / Return",
+      "pair_id": "row7",
+      "pos": { "x": 0, "y": 74, "w": 50, "h": 8.5, "unit": "%" },
+      "fields": [
+        { "id": "return_place", "bbox": [20, 15, 400, 40], "value": "" },
+        { "id": "return_date", "bbox": [20, 60, 200, 30], "value": "" }
+      ]
+    },
+    {
+      "id": "payment_terms",
+      "label": "§15 Условия оплаты / Payment Terms",
+      "pair_id": "row7",
+      "pos": { "x": 50, "y": 74, "w": 50, "h": 8.5, "unit": "%" },
+      "fields": [
+        { "id": "payment_terms_text", "bbox": [20, 15, 500, 80], "style": ["bold"], "value": "" },
+        { "id": "payment_city", "bbox": [20, 100, 300, 30], "value": "" }
+      ]
+    },
+    {
+      "id": "special_agreements",
+      "label": "§20 Особые соглашения / Special Agreements",
+      "pair_id": "row8",
+      "pos": { "x": 0, "y": 82.5, "w": 50, "h": 2.5, "unit": "%" },
+      "fields": [
+        { "id": "special_terms", "bbox": [20, 10, 600, 50], "style": ["bold"], "value": "" }
+      ]
+    },
+    {
+      "id": "signatures",
+      "label": "§21-§24 Подписи / Signatures",
+      "pair_id": "row8",
+      "pos": { "x": 50, "y": 82.5, "w": 50, "h": 2.5, "unit": "%" },
+      "fields": [
+        { "id": "signature_info", "bbox": [20, 10, 500, 50], "value": "" }
+      ]
+    },
+    {
+      "id": "vehicle_info",
+      "label": "§25-§26 Транспортное средство / Vehicle",
+      "full_width": true,
+      "pos": { "x": 0, "y": 85, "w": 100, "h": 15, "unit": "%" },
+      "fields": [
+        { "id": "tractor_plate", "bbox": [20, 20, 300, 35], "style": ["bold"], "value": "" },
+        { "id": "trailer_plate", "bbox": [20, 60, 300, 35], "style": ["bold"], "value": "" },
+        { "id": "driver_name", "bbox": [400, 20, 300, 35], "value": "" },
+        { "id": "vehicle_brand", "bbox": [400, 60, 300, 35], "value": "" },
+        { "id": "date_departure", "bbox": [20, 100, 200, 30], "value": "" },
+        { "id": "date_arrival", "bbox": [400, 100, 200, 30], "value": "" }
+      ]
+    }
+  ]
+}

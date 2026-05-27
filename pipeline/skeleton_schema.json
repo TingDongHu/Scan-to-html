@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Skeleton",
+  "description": "Layout skeleton for a document page",
+  "type": "object",
+  "required": ["doc", "page", "sections"],
+  "properties": {
+    "doc": {
+      "type": "string",
+      "description": "Document type identifier (e.g. 'cmr', 'invoice')"
+    },
+    "page": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "description": "Page width in pixels" },
+        "height": { "type": "number", "description": "Page height in pixels" }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "pos"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "pos": {
+            "type": "object",
+            "required": ["x", "y", "w", "h"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "w": { "type": "number" },
+              "h": { "type": "number" },
+              "unit": { "type": "string", "enum": ["px", "%"], "default": "%" }
+            }
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "bbox"],
+              "properties": {
+                "id": { "type": "string" },
+                "bbox": {
+                  "type": "array", "minItems": 4, "maxItems": 4,
+                  "items": { "type": "number" }
+                },
+                "style": {
+                  "type": "array",
+                  "items": { "enum": ["bold", "center", "italic"] }
+                },
+                "value": { "type": "string", "description": "Filled by Stage 2" }
+              }
+            }
+          },
+          "table": {
+            "type": "object",
+            "properties": {
+              "headers": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "cells": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "bbox": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } },
+                          "value": { "type": "string", "description": "Filled by Stage 2" },
+                          "colspan": { "type": "integer", "default": 1 },
+                          "style": { "type": "array", "items": { "enum": ["bold", "center", "italic"] } }
+                        },
+                        "required": ["bbox"]
+                      }
+                    }
+                  },
+                  "required": ["cells"]
+                }
+              }
+            },
+            "required": ["headers", "rows"]
+          },
+          "children": {
+            "type": "array",
+            "description": "Nested sections for complex layouts",
+            "items": { "$ref": "#" }
+          },
+          "full_width": {
+            "type": "boolean",
+            "description": "Section spans full page width (not paired in 2-column layout)",
+            "default": false
+          },
+          "pair_id": {
+            "type": "string",
+            "description": "Explicit pairing key — sections with same pair_id are rendered in the same row"
+          }
+        }
+      }
+    }
+  }
+}

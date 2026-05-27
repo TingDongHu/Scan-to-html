@@ -1,0 +1,23 @@
+{
+  "doc": "test",
+  "page": {"width": 2481, "height": 3508},
+  "sections": [
+    {
+      "id": "sender",
+      "label": "§1 Sender",
+      "pos": {"x": 0, "y": 0, "w": 50, "h": 20, "unit": "%"},
+      "fields": [
+        {"id": "company", "bbox": [10, 20, 200, 60], "style": ["bold"]},
+        {"id": "address", "bbox": [10, 60, 200, 130]}
+      ]
+    },
+    {
+      "id": "header",
+      "label": "Header",
+      "pos": {"x": 50, "y": 0, "w": 50, "h": 20, "unit": "%"},
+      "fields": [
+        {"id": "title", "bbox": [10, 20, 200, 60], "style": ["center"]}
+      ]
+    }
+  ]
+}
