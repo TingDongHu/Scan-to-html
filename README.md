@@ -4,23 +4,30 @@
 
 ## Quick Start
 
-### 1. 安装
+### 一键安装（推荐）
 
-```bash
-pip install pymupdf pillow html2image
+直接告诉 Claude Code：
+
+```
+帮我安装 scan-to-html skill：git clone https://github.com/TingDongHu/Scan-to-html.git 到 ~/.claude/skills/ 并安装依赖
 ```
 
-### 2. 复制到 Claude Code skills 目录
+Claude Code 会自动完成：克隆仓库 → 安装 pip 依赖 → 配置就绪。
+
+### 手动安装
 
 ```bash
+# 1. 安装依赖
+pip install pymupdf pillow html2image
+
+# 2. 复制到 skills 目录
 # macOS / Linux
 cp -r scan-to-html ~/.claude/skills/
-
 # Windows
 xcopy /E /I scan-to-html %USERPROFILE%\.claude\skills\scan-to-html
 ```
 
-### 3. 一句话触发
+### 一句话触发
 
 在 Claude Code 中直接说：
 
